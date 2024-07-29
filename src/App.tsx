@@ -2,6 +2,9 @@ import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Signup from "./pages/Signup";
 import { Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
+import SuccessfulReset from "./components/SuccessfulReset";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -17,6 +20,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgotPassword" element={<SuccessfulReset />} />
       </Routes>
     </ThemeProvider>
   );

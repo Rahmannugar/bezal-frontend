@@ -19,7 +19,7 @@ interface userState {
 const UserContext = createContext<
   | {
       state: userState;
-      setState: (state: userState) => void;
+      setState: React.Dispatch<React.SetStateAction<userState>>;
     }
   | undefined
 >(undefined);
