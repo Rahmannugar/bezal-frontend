@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import SuccessfulReset from "./components/SuccessfulReset";
+import Home from "./pages/Home";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -19,9 +20,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/forgotPassword" element={<SuccessfulReset />} />
+        <Route path="/forgotPassword" element={<ResetPassword />} />
       </Routes>
     </ThemeProvider>
   );
