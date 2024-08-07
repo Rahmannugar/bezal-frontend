@@ -73,7 +73,7 @@ const Navbar = () => {
           alt="bezal"
           className="w-[40px] h-[40px] rounded-full"
         />
-        <div className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]">
+        <button className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]">
           <h1>BeelBash</h1>
           {/* drop down menu */}
           <div>
@@ -87,7 +87,7 @@ const Navbar = () => {
               <path d="M1 1L7.28571 6L13 1" stroke="#585858" />
             </svg>
           </div>
-        </div>
+        </button>
       </div>
     </nav>
   );
