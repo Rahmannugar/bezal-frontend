@@ -2,7 +2,7 @@ const PostBar = () => {
   return (
     <div>
       {/* post bar */}
-      <div className="min-w-[650px] w-[50vw] max-w-[100%] h-[178px] space-y-8 shadow-md px-7 pt-5 mt-10 rounded-[20px] mx-auto bg-white">
+      <div className="min-w-[600px] w-[50vw] max-w-[100%] h-[178px] space-y-8 shadow-md px-7 pt-5 mt-10 rounded-[20px] mx-auto bg-white">
         <div className="flex items-center space-x-5">
           <img
             src="https://i.ibb.co/4sCN8rm/bezal.png"

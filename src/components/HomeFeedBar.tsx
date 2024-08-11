@@ -4,7 +4,7 @@ const HomeFeedBar = () => {
   return (
     <div>
       {/* HomeFeed bar */}
-      <div className="bg-white p-7 min-w-[643px] w-[50vw] max-w-[100%] min-h-[674px] rounded-[20px] mt-10 shadow-md">
+      <div className="bg-white p-7 min-w-[600px] w-[50vw] max-w-[100%] min-h-[674px] rounded-[20px] mt-10 shadow-md">
         {/* user data */}
         <div className="flex justify-between">
           {/* left top section */}
