@@ -1,6 +1,6 @@
 const LeftBar = () => {
   return (
-    <div className="px-10 pt-10">
+    <div className="px-5 pt-10">
       {/* top left side bar */}
       <div className="min-w-[238px] w-[20vw] max-w-[100%] h-auto py-8 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
         {/* individual icons */}
