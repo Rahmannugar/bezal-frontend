@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <nav className="flex relative py-5 justify-between space-x-3 items-center px-16">
+    <nav className="flex relative py-5 justify-between space-x-3 w-full items-center px-16">
       {/* App icon */}
       <a href="/">
         <svg
