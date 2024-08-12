@@ -10,6 +10,7 @@ import { useState } from "react";
 const Signup = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
+  const [rePassword, setRePassword] = useState<string>("");
 
   //response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -32,10 +33,42 @@ const Signup = () => {
     dispatch(updateUserState({ [name]: value }));
   };
 
+  // Regex for validating email format
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  //verify password
+  const handleRePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRePassword(e.target.value);
+  };
+
   //submit action
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setResponseMessage(""); // Clear previous error messages
+
+    // Perform validation checks
+    let hasErrors = false;
+
+    // Verify email format
+    if (!emailRegex.test(state.email)) {
+      setResponseMessage("Please enter a valid email address");
+      setResponseSeverity("error");
+      setOpenSnackbar(true);
+      hasErrors = true;
+    }
+
+    // Verify passwords match
+    if (state.password !== rePassword) {
+      setResponseMessage("Passwords do not match");
+      setResponseSeverity("error");
+      setOpenSnackbar(true);
+      hasErrors = true;
+    }
+
+    // If there are any errors, prevent submission
+    if (hasErrors) {
+      return;
+    }
 
     try {
       //posting FormData to backend for signup
@@ -53,7 +86,6 @@ const Signup = () => {
           password: state.password,
         },
       });
-
       if (response.status === 201) {
         console.log("Signup successful:", response.data);
         setResponseMessage("Signup successful!");
@@ -168,9 +200,10 @@ const Signup = () => {
           <input
             type="password"
             placeholder="*********"
-            // name="password"
-            // value={state.password}
-            // onChange={handleChange}
+            name="rePassword"
+            value={rePassword}
+            onChange={handleRePasswordChange}
+            required
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
