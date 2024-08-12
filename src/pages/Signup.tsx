@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel, Snackbar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { updateUserState, resetUserState } from "../states/userSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
@@ -41,12 +41,15 @@ const Signup = () => {
     setRePassword(e.target.value);
   };
 
+  //navigation
+  const navigate = useNavigate();
+
   //submit action
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setResponseMessage(""); // Clear previous error messages
+    setResponseMessage("");
 
-    // Perform validation checks
+    // Perform email and password validation checks
     let hasErrors = false;
 
     // Verify email format
@@ -65,7 +68,6 @@ const Signup = () => {
       hasErrors = true;
     }
 
-    // If there are any errors, prevent submission
     if (hasErrors) {
       return;
     }
@@ -92,6 +94,9 @@ const Signup = () => {
         setResponseSeverity("success");
         setOpenSnackbar(true);
         dispatch(resetUserState());
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (error) {
       // Error handling
