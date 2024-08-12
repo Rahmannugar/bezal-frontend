@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
-import { userData } from "../states/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../states/store";
+import { updateUserState, resetUserState } from "../states/userSlice";
 
 const ResetPassword = () => {
-  const { state, setState } = userData();
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.user);
 
-  //handling form inputs change
+  // Handling form inputs change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    dispatch(updateUserState({ [name]: value }));
   };
 
   //submit action

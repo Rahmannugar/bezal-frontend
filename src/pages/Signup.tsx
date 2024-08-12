@@ -1,24 +1,74 @@
-import { Checkbox, FormControlLabel } from "@mui/material";
-import { userData } from "../states/UserContext";
+import { Checkbox, FormControlLabel, Snackbar } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../states/store";
+import { updateUserState, resetUserState } from "../states/userSlice";
 import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 
 const Signup = () => {
-  const { state, setState } = userData();
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.user);
 
-  //handling form inputs change
+  //response logic
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [responseSeverity, setResponseSeverity] = useState<
+    "success" | "error"
+  >();
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  //backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  // Handling form inputs change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    dispatch(updateUserState({ [name]: value }));
   };
 
   //submit action
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted", state);
-    // posting form inputs to backend for signup
+    setResponseMessage(""); // Clear previous error messages
+
+    try {
+      //posting FormData to backend for signup
+      const response = await axios({
+        method: "POST",
+        url: `${backendURL}/signup`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          firstName: state.firstName,
+          lastName: state.lastName,
+          userName: state.userName,
+          email: state.email,
+          password: state.password,
+        },
+      });
+
+      if (response.status === 201) {
+        console.log("Signup successful:", response.data);
+        setResponseMessage("Signup successful!");
+        setResponseSeverity("success");
+        setOpenSnackbar(true);
+        dispatch(resetUserState());
+      }
+    } catch (error) {
+      // Error handling
+      const err = error as AxiosError;
+      const errorTextContent: any = err.response?.data;
+      setResponseMessage(errorTextContent.message);
+      setOpenSnackbar(true);
+      setResponseSeverity("error");
+    }
   };
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
@@ -31,7 +81,10 @@ const Signup = () => {
       </div>
 
       {/* sign up form */}
-      <form className="flex flex-col  bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8">
+      <form
+        onSubmit={handleSignup}
+        className="flex flex-col  bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8"
+      >
         <h1 className="font-bold leading-32px text-[24px] mb-7">sign UP</h1>
         <div className="space-y-2 mb-5">
           <label htmlFor="firstName" className="font-semibold leading-6">
@@ -40,6 +93,7 @@ const Signup = () => {
           <input
             type="text"
             placeholder="Your first name"
+            required
             name="firstName"
             value={state.firstName}
             onChange={handleChange}
@@ -53,6 +107,7 @@ const Signup = () => {
           </label>
           <input
             type="text"
+            required
             placeholder="Your last name"
             name="lastName"
             value={state.lastName}
@@ -68,6 +123,7 @@ const Signup = () => {
           <input
             type="text"
             placeholder="Your user name"
+            required
             name="userName"
             value={state.userName}
             onChange={handleChange}
@@ -83,6 +139,7 @@ const Signup = () => {
             type="text"
             placeholder="Your email address"
             name="email"
+            required
             value={state.email}
             onChange={handleChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
@@ -97,6 +154,7 @@ const Signup = () => {
             type="password"
             placeholder="*********"
             name="password"
+            required
             value={state.password}
             onChange={handleChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
@@ -127,7 +185,7 @@ const Signup = () => {
 
         <div>
           <button
-            onClick={handleSignup}
+            type="submit"
             className="text-white mt-10 bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
           >
             Sign up
@@ -139,6 +197,20 @@ const Signup = () => {
             Login
           </Link>
         </div>
+
+        {/* Alert logic */}
+
+        {responseMessage && (
+          <Snackbar open={openSnackbar} autoHideDuration={6000}>
+            <Alert
+              onClose={handleCloseSnackbar}
+              variant="filled"
+              severity={responseSeverity}
+            >
+              {responseMessage}
+            </Alert>
+          </Snackbar>
+        )}
       </form>
     </div>
   );
