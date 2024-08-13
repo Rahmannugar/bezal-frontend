@@ -89,7 +89,7 @@ const Signup = () => {
         },
       });
       if (response.status === 201) {
-        console.log("Signup successful:", response.data);
+        //console.log("Signup successful:", response.data);
         setResponseMessage("Signup successful!");
         setResponseSeverity("success");
         setOpenSnackbar(true);
@@ -107,6 +107,7 @@ const Signup = () => {
       setResponseSeverity("error");
     }
   };
+  console.log(state);
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
       <div className="">
@@ -237,7 +238,6 @@ const Signup = () => {
         </div>
 
         {/* Alert logic */}
-
         {responseMessage && (
           <Snackbar open={openSnackbar} autoHideDuration={6000}>
             <Alert

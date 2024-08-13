@@ -1,11 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { updateUserState, resetUserState } from "../states/userSlice";
+import { setUserState, updateUserState } from "../states/userSlice";
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { Alert, Snackbar } from "@mui/material";
 
 const Login = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
+
+  //response logic
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [responseSeverity, setResponseSeverity] = useState<
+    "success" | "error"
+  >();
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  //backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   // Handling form inputs change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,11 +31,67 @@ const Login = () => {
     dispatch(updateUserState({ [name]: value }));
   };
 
+  // Regex for validating email format
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  //navigation
+  const navigate = useNavigate();
+
   //submit action
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted", state);
-    // posting form inputs to backend for login
+    setResponseMessage("");
+
+    // Perform email validation checks
+    let hasErrors = false;
+
+    // Verify email format
+    if (!emailRegex.test(state.email)) {
+      setResponseMessage("Please enter a valid email address");
+      setResponseSeverity("error");
+      setOpenSnackbar(true);
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      return;
+    }
+
+    try {
+      //posting FormData to backend for signup
+      const response = await axios({
+        method: "POST",
+        url: `${backendURL}/signin`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          email: state.email,
+          password: state.password,
+        },
+      });
+      if (response.status === 201) {
+        const userData = {
+          ...response.data.existingUser,
+          token: response.data.token,
+        };
+        dispatch(setUserState(userData));
+        setResponseMessage("Login successful!");
+        setResponseSeverity("success");
+        setOpenSnackbar(true);
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      }
+    } catch (error) {
+      // Error handling
+      const err = error as AxiosError;
+      const errorTextContent: any = err.response?.data;
+      setResponseMessage(errorTextContent.message);
+      setOpenSnackbar(true);
+      setResponseSeverity("error");
+    }
   };
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
@@ -30,7 +104,10 @@ const Login = () => {
       </div>
 
       {/* sign up form */}
-      <form className="flex flex-col bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8">
+      <form
+        onSubmit={handleLogin}
+        className="flex flex-col bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8"
+      >
         <h1 className="font-bold leading-32px text-[24px] mb-7">Login</h1>
 
         <div className="space-y-2 mb-5">
@@ -66,7 +143,7 @@ const Login = () => {
         </Link>
         <div className="mt-7">
           <button
-            onClick={handleLogin}
+            type="submit"
             className="text-white  bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
           >
             Login
@@ -78,6 +155,19 @@ const Login = () => {
             Sign up
           </Link>
         </div>
+
+        {/* Alert logic */}
+        {responseMessage && (
+          <Snackbar open={openSnackbar} autoHideDuration={6000}>
+            <Alert
+              onClose={handleCloseSnackbar}
+              variant="filled"
+              severity={responseSeverity}
+            >
+              {responseMessage}
+            </Alert>
+          </Snackbar>
+        )}
       </form>
     </div>
   );

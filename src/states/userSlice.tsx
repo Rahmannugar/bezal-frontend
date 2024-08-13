@@ -12,6 +12,7 @@ export interface UserState {
   userPosts: string[];
   userFollowers: string[];
   userFollows: string[];
+  token: string | null;
 }
 
 const initialState: UserState = {
@@ -26,6 +27,7 @@ const initialState: UserState = {
   userPosts: [],
   userFollowers: [],
   userFollows: [],
+  token: null,
 };
 
 const userSlice = createSlice({
