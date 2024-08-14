@@ -8,13 +8,12 @@ import { RootState } from "../states/store";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state: RootState) => state.user);
   // form inputs
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   //login logic
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   // response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -78,22 +77,17 @@ const Login = () => {
           email: email,
           password: password,
         },
+        withCredentials: true,
       });
 
       if (response.status === 201) {
-        dispatch(
-          setUser({
-            user: response.data.existingUser,
-            token: response.data.token,
-          })
-        );
+        dispatch(setUser(response.data));
         setResponseMessage("Login successful!");
         setResponseSeverity("success");
         setOpenSnackbar(true);
-        setIsLoggedIn(true);
-        // setTimeout(() => {
-        //   navigate("/");
-        // }, 2000);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
     } catch (error) {
       // Error handling

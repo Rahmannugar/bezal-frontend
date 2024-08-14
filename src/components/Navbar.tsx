@@ -1,15 +1,32 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { resetUser } from "../states/userSlice";
+import { useNavigate } from "react-router-dom";
+import { Alert, Snackbar } from "@mui/material";
+import { useState } from "react";
 
 const Navbar = () => {
-  const token = useSelector((state: RootState) => state.user.token);
+  const user = useSelector((state: RootState) => state.user.user);
 
-  useEffect(() => {
-    axios.get;
-  }, []);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  //log user out function
+  const handleResetUser = () => {
+    dispatch(resetUser());
+    setOpenSnackbar(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  };
   return (
     <nav className="flex relative py-5 justify-between space-x-3 w-full items-center px-16">
       {/* App icon */}
@@ -56,7 +73,7 @@ const Navbar = () => {
       </div>
 
       {/* notification icon */}
-      <div>
+      <div onClick={handleResetUser}>
         <svg
           width="40"
           height="40"
@@ -85,7 +102,7 @@ const Navbar = () => {
           className="w-[40px] h-[40px] rounded-full"
         />
         <button className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]">
-          <h1>hhfhf</h1>
+          <h1>{user.userName}</h1>
           {/* drop down menu */}
           <div>
             <svg
@@ -100,6 +117,17 @@ const Navbar = () => {
           </div>
         </button>
       </div>
+
+      {/* Alert logic */}
+      {isLoggedIn ? (
+        <></>
+      ) : (
+        <Snackbar open={openSnackbar} autoHideDuration={3000}>
+          <Alert onClose={handleCloseSnackbar} variant="filled" severity="info">
+            User has logged out!
+          </Alert>
+        </Snackbar>
+      )}
     </nav>
   );
 };

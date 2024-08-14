@@ -19,15 +19,20 @@ const App = () => {
     },
   });
 
-  const token = useSelector((state: RootState) => state.user);
-  console.log(token);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
+        />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+        />
         <Route path="/forgotPassword" element={<ResetPassword />} />
       </Routes>
     </ThemeProvider>
