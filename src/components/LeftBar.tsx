@@ -1,5 +1,12 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../states/store";
 
 const LeftBar = () => {
+  const user = useSelector((state: RootState) => state.user.user);
+  const trimmedUserName =
+    user.userName.trim().length > 6
+      ? user.userName.trim().slice(0, 6) + "..."
+      : user.userName.trim();
   return (
     <div className="px-5 pt-10">
       {/* top left side bar */}
@@ -165,7 +172,7 @@ const LeftBar = () => {
         </a>
 
         {/* User profile */}
-        <a href="/" className="flex items-center px-10 space-x-3 group">
+        <a href="/" className="flex items-center px-10  group">
           <div>
             <img
               src="https://i.ibb.co/KsMc2Qn/bezal.png"
@@ -173,8 +180,8 @@ const LeftBar = () => {
               className="w-[20px] h-[20px] rounded-full"
             />
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
-            @JohnDoe
+          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] pl-5 font-semibold text-[20px]">
+            @{trimmedUserName}
           </h1>
         </a>
       </div>

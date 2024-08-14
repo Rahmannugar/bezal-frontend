@@ -2,8 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { resetUser } from "../states/userSlice";
 import { useNavigate } from "react-router-dom";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, DialogContent, Popover, Snackbar } from "@mui/material";
 import { useState } from "react";
+import Dialog from "@mui/material/Dialog";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -12,11 +13,23 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   // Handle Snackbar close
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+
+  //handle user menu popup
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
   };
 
   //log user out function
@@ -27,6 +40,9 @@ const Navbar = () => {
       navigate("/login");
     }, 2000);
   };
+
+  const open = Boolean(anchorEl);
+
   return (
     <nav className="flex relative py-5 justify-between space-x-3 w-full items-center px-16">
       {/* App icon */}
@@ -73,7 +89,7 @@ const Navbar = () => {
       </div>
 
       {/* notification icon */}
-      <div onClick={handleResetUser}>
+      <div>
         <svg
           width="40"
           height="40"
@@ -97,13 +113,40 @@ const Navbar = () => {
       {/* user(s) menu */}
       <div className="flex justify-center items-center space-x-3">
         <img
-          src="https://i.ibb.co/KsMc2Qn/bezal.png"
+          src={user.profileImage}
           alt="bezal"
           className="w-[40px] h-[40px] rounded-full"
         />
-        <button className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]">
+
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handlePopoverClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <div className="p-4">
+            <h1>{user.userName}</h1>
+            <button
+              onClick={handleResetUser}
+              className="text-white bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
+            >
+              Log out
+            </button>
+          </div>
+        </Popover>
+        <button
+          onClick={handlePopoverOpen}
+          className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]"
+        >
           <h1>{user.userName}</h1>
-          {/* drop down menu */}
+
           <div>
             <svg
               width="14"
