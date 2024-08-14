@@ -1,16 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../states/store";
-import { setUserState, updateUserState } from "../states/userSlice";
-import { useState } from "react";
+import { setUser } from "../states/userSlice";
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
+import { RootState } from "../states/store";
 
 const Login = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
+  // form inputs
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  //response logic
+  //login logic
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  // response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [responseSeverity, setResponseSeverity] = useState<
     "success" | "error"
@@ -22,22 +28,25 @@ const Login = () => {
     setOpenSnackbar(false);
   };
 
-  //backend URL
+  // backend URL
   const backendURL = import.meta.env.VITE_BACKEND_URL;
-
-  // Handling form inputs change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateUserState({ [name]: value }));
-  };
 
   // Regex for validating email format
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  //navigation
+  // Handling form inputs change
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  // navigation
   const navigate = useNavigate();
 
-  //submit action
+  // submit action
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setResponseMessage("");
@@ -46,7 +55,7 @@ const Login = () => {
     let hasErrors = false;
 
     // Verify email format
-    if (!emailRegex.test(state.email)) {
+    if (!emailRegex.test(email)) {
       setResponseMessage("Please enter a valid email address");
       setResponseSeverity("error");
       setOpenSnackbar(true);
@@ -58,7 +67,7 @@ const Login = () => {
     }
 
     try {
-      //posting FormData to backend for signup
+      // posting FormData to backend for login
       const response = await axios({
         method: "POST",
         url: `${backendURL}/signin`,
@@ -66,23 +75,25 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         data: {
-          email: state.email,
-          password: state.password,
+          email: email,
+          password: password,
         },
       });
+
       if (response.status === 201) {
-        const userData = {
-          ...response.data.existingUser,
-          token: response.data.token,
-        };
-        dispatch(setUserState(userData));
+        dispatch(
+          setUser({
+            user: response.data.existingUser,
+            token: response.data.token,
+          })
+        );
         setResponseMessage("Login successful!");
         setResponseSeverity("success");
         setOpenSnackbar(true);
-
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        setIsLoggedIn(true);
+        // setTimeout(() => {
+        //   navigate("/");
+        // }, 2000);
       }
     } catch (error) {
       // Error handling
@@ -93,6 +104,17 @@ const Login = () => {
       setResponseSeverity("error");
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 2000); // Delay of 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
       <div>
@@ -118,9 +140,9 @@ const Login = () => {
             type="text"
             placeholder="Your email address"
             name="email"
-            value={state.email}
-            onChange={handleChange}
-            className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
+            value={email}
+            onChange={handleEmailChange}
+            className="appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
 
@@ -132,9 +154,9 @@ const Login = () => {
             type="password"
             placeholder="*********"
             name="password"
-            value={state.password}
-            onChange={handleChange}
-            className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
+            value={password}
+            onChange={handlePasswordChange}
+            className="appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
 
@@ -144,7 +166,7 @@ const Login = () => {
         <div className="mt-7">
           <button
             type="submit"
-            className="text-white  bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
+            className="text-white bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
           >
             Login
           </button>
@@ -172,4 +194,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

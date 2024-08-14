@@ -180,7 +180,7 @@ const RightBar = () => {
         <div className="flex justify-between items-center">
           <div className="font-semibold text-[#5D5F63] flex items-center space-x-2">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />
@@ -247,7 +247,7 @@ const RightBar = () => {
         <div className="flex justify-between items-center pt-3">
           <div className="font-semibold text-[#5D5F63] flex items-center space-x-2">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />
@@ -340,7 +340,7 @@ const RightBar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />
@@ -410,7 +410,7 @@ const RightBar = () => {
         <div className="flex justify-between items-center pt-3">
           <div className="flex items-center space-x-2">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />

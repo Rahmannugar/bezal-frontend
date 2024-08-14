@@ -1,4 +1,15 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../states/store";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 const Navbar = () => {
+  const token = useSelector((state: RootState) => state.user.token);
+
+  useEffect(() => {
+    axios.get;
+  }, []);
+
   return (
     <nav className="flex relative py-5 justify-between space-x-3 w-full items-center px-16">
       {/* App icon */}
@@ -69,12 +80,12 @@ const Navbar = () => {
       {/* user(s) menu */}
       <div className="flex justify-center items-center space-x-3">
         <img
-          src="https://i.ibb.co/4sCN8rm/bezal.png"
+          src="https://i.ibb.co/KsMc2Qn/bezal.png"
           alt="bezal"
           className="w-[40px] h-[40px] rounded-full"
         />
         <button className="flex justify-center items-center space-x-2 rounded-[10px] border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]">
-          <h1>BeelBash</h1>
+          <h1>hhfhf</h1>
           {/* drop down menu */}
           <div>
             <svg
@@ -92,4 +103,5 @@ const Navbar = () => {
     </nav>
   );
 };
+
 export default Navbar;

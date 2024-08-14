@@ -10,7 +10,7 @@ const HomeFeedBar = () => {
           {/* left top section */}
           <div className="flex items-center space-x-5">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] rounded-full"
             />
@@ -191,7 +191,7 @@ const HomeFeedBar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-5 mt-5">
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />

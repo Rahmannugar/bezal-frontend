@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { updateUserState, resetUserState } from "../states/userSlice";
+import { useState } from "react";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.user);
 
+  //form inputs
+  const [email, setEmail] = useState<string>("");
+
   // Handling form inputs change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateUserState({ [name]: value }));
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
 
   //submit action
@@ -42,7 +44,10 @@ const ResetPassword = () => {
         </div>
 
         {/* Reset password form */}
-        <form className="flex flex-col bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8">
+        <form
+          onSubmit={handleReset}
+          className="flex flex-col bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8"
+        >
           <h1 className="font-bold leading-32px text-[24px] mb-7">
             Reset your password
           </h1>
@@ -55,15 +60,15 @@ const ResetPassword = () => {
               type="text"
               placeholder="Your email address"
               name="email"
-              value={state.email}
-              onChange={handleChange}
+              value={email}
+              onChange={handleEmailChange}
               className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
             />
           </div>
 
           <div className="mt-7">
             <button
-              onClick={handleReset}
+              type="submit"
               className="text-white  bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
             >
               Continue

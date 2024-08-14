@@ -1,32 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  location: string;
-  profileImage: string;
-  coverImage: string;
-  email: string;
-  password: string;
-  userPosts: string[];
-  userFollowers: string[];
-  userFollows: string[];
+  user: object | null;
   token: string | null;
 }
 
 const initialState: UserState = {
-  firstName: "",
-  lastName: "",
-  userName: "",
-  location: "",
-  profileImage: "",
-  coverImage: "",
-  email: "",
-  password: "",
-  userPosts: [],
-  userFollowers: [],
-  userFollows: [],
+  user: null,
   token: null,
 };
 
@@ -34,18 +14,19 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserState(state, action: PayloadAction<UserState>) {
-      return action.payload;
+    setUser(
+      state,
+      action: PayloadAction<{ user: UserState["user"]; token: string | null }>
+    ) {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
     },
-    updateUserState(state, action: PayloadAction<Partial<UserState>>) {
-      return { ...state, ...action.payload };
-    },
-    resetUserState() {
+
+    resetUser() {
       return initialState;
     },
   },
 });
 
-export const { setUserState, updateUserState, resetUserState } =
-  userSlice.actions;
+export const { setUser, resetUser } = userSlice.actions;
 export default userSlice.reducer;

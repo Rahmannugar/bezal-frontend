@@ -1,15 +1,16 @@
 import { Checkbox, FormControlLabel, Snackbar } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../states/store";
-import { updateUserState, resetUserState } from "../states/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
 
 const Signup = () => {
-  const dispatch = useDispatch();
-  const state = useSelector((state: RootState) => state.user);
+  //form inputs
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [rePassword, setRePassword] = useState<string>("");
 
   //response logic
@@ -28,18 +29,31 @@ const Signup = () => {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   // Handling form inputs change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateUserState({ [name]: value }));
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLastName(e.target.value);
+  };
+  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleRePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRePassword(e.target.value);
   };
 
   // Regex for validating email format
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  //verify password
-  const handleRePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRePassword(e.target.value);
-  };
 
   //navigation
   const navigate = useNavigate();
@@ -53,7 +67,7 @@ const Signup = () => {
     let hasErrors = false;
 
     // Verify email format
-    if (!emailRegex.test(state.email)) {
+    if (!emailRegex.test(email)) {
       setResponseMessage("Please enter a valid email address");
       setResponseSeverity("error");
       setOpenSnackbar(true);
@@ -61,7 +75,7 @@ const Signup = () => {
     }
 
     // Verify passwords match
-    if (state.password !== rePassword) {
+    if (password !== rePassword) {
       setResponseMessage("Passwords do not match");
       setResponseSeverity("error");
       setOpenSnackbar(true);
@@ -81,19 +95,17 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
         data: {
-          firstName: state.firstName,
-          lastName: state.lastName,
-          userName: state.userName,
-          email: state.email,
-          password: state.password,
+          firstName: firstName,
+          lastName: lastName,
+          userName: userName,
+          email: email,
+          password: password,
         },
       });
       if (response.status === 201) {
-        //console.log("Signup successful:", response.data);
         setResponseMessage("Signup successful!");
         setResponseSeverity("success");
         setOpenSnackbar(true);
-        dispatch(resetUserState());
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -107,7 +119,6 @@ const Signup = () => {
       setResponseSeverity("error");
     }
   };
-  console.log(state);
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
       <div className="">
@@ -133,8 +144,8 @@ const Signup = () => {
             placeholder="Your first name"
             required
             name="firstName"
-            value={state.firstName}
-            onChange={handleChange}
+            value={firstName}
+            onChange={handleFirstNameChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
@@ -148,8 +159,8 @@ const Signup = () => {
             required
             placeholder="Your last name"
             name="lastName"
-            value={state.lastName}
-            onChange={handleChange}
+            value={lastName}
+            onChange={handleLastNameChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
@@ -163,8 +174,8 @@ const Signup = () => {
             placeholder="Your user name"
             required
             name="userName"
-            value={state.userName}
-            onChange={handleChange}
+            value={userName}
+            onChange={handleUserNameChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
@@ -178,8 +189,8 @@ const Signup = () => {
             placeholder="Your email address"
             name="email"
             required
-            value={state.email}
-            onChange={handleChange}
+            value={email}
+            onChange={handleEmailChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>
@@ -193,8 +204,8 @@ const Signup = () => {
             placeholder="*********"
             name="password"
             required
-            value={state.password}
-            onChange={handleChange}
+            value={password}
+            onChange={handlePasswordChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>

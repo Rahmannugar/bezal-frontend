@@ -1,3 +1,4 @@
+
 const LeftBar = () => {
   return (
     <div className="px-5 pt-10">
@@ -167,7 +168,7 @@ const LeftBar = () => {
         <a href="/" className="flex items-center px-10 space-x-3 group">
           <div>
             <img
-              src="https://i.ibb.co/4sCN8rm/bezal.png"
+              src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
               className="w-[20px] h-[20px] rounded-full"
             />
