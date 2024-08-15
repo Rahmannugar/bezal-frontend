@@ -1,8 +1,16 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../states/store";
+
 const RightBar = () => {
+  const mode = useSelector((state: RootState) => state.user.mode);
   return (
     <div className="px-5 pt-10 space-y-10">
       {/* top right bar */}
-      <div className="min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={` ${
+          mode ? "bg-white" : "bg-transparent border"
+        } min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 shadow-md rounded-[20px] flex flex-col space-y-5`}
+      >
         {/* top menu */}
         <div className="flex justify-between items-center">
           {/* left top menu */}
@@ -19,7 +27,13 @@ const RightBar = () => {
                 fill="#FF7A00"
               />
             </svg>
-            <h1 className="text-[#000000] font-semibold">Trending</h1>
+            <h1
+              className={` ${
+                mode ? "text-[#000000]" : "text-white"
+              } font-semibold`}
+            >
+              Trending
+            </h1>
           </div>
           <button className="text-[#4385F5]">See more</button>
         </div>
@@ -29,8 +43,20 @@ const RightBar = () => {
         {/* Follow section */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="font-semibold text-[#5D5F63]">#UKRAINE</h1>
-            <h2 className="text-[#AAAAAA] text-sm">345 post</h2>
+            <h1
+              className={`font-semibold ${
+                mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+              }`}
+            >
+              #UKRAINE
+            </h1>
+            <h2
+              className={`${
+                mode ? " text-[#AAAAAA]" : "text-[#cdcdcd]"
+              } text-sm`}
+            >
+              345 post
+            </h2>
           </div>
           {/* Follow button */}
           <button>
@@ -47,7 +73,7 @@ const RightBar = () => {
                 width="99"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"
@@ -91,8 +117,20 @@ const RightBar = () => {
         {/* Follow section */}
         <div className="flex justify-between items-center pt-3">
           <div>
-            <h1 className="font-semibold text-[#5D5F63]">#UKRAINE</h1>
-            <h2 className="text-[#AAAAAA] text-sm">345 post</h2>
+            <h1
+              className={`font-semibold ${
+                mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+              }`}
+            >
+              #UKRAINE
+            </h1>
+            <h2
+              className={`${
+                mode ? " text-[#AAAAAA]" : "text-[#cdcdcd]"
+              } text-sm`}
+            >
+              345 post
+            </h2>
           </div>
           {/* Follow button */}
           <button>
@@ -109,7 +147,7 @@ const RightBar = () => {
                 width="99"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"
@@ -152,7 +190,11 @@ const RightBar = () => {
       </div>
 
       {/* friend bar */}
-      <div className="min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={`min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 shadow-md rounded-[20px] flex flex-col space-y-5 ${
+          mode ? "bg-white" : "bg-transparent border"
+        }`}
+      >
         {/* top menu */}
         <div className="flex justify-between items-center">
           {/* left top menu */}
@@ -169,7 +211,13 @@ const RightBar = () => {
                 fill="#4385F5"
               />
             </svg>
-            <h1 className="text-[#000000] font-semibold">Friend Suggestion</h1>
+            <h1
+              className={`font-semibold ${
+                mode ? "text-[#000000]" : "text-white"
+              }`}
+            >
+              Friend Suggestion
+            </h1>
           </div>
           <button className="text-[#4385F5]">See more</button>
         </div>
@@ -178,7 +226,11 @@ const RightBar = () => {
 
         {/* Add section */}
         <div className="flex justify-between items-center">
-          <div className="font-semibold text-[#5D5F63] flex items-center space-x-2">
+          <div
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+            } font-semibold  flex items-center space-x-2`}
+          >
             <img
               src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
@@ -202,7 +254,7 @@ const RightBar = () => {
                 width="79"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"
@@ -245,7 +297,11 @@ const RightBar = () => {
 
         {/* Add section */}
         <div className="flex justify-between items-center pt-3">
-          <div className="font-semibold text-[#5D5F63] flex items-center space-x-2">
+          <div
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+            } font-semibold  flex items-center space-x-2`}
+          >
             <img
               src="https://i.ibb.co/KsMc2Qn/bezal.png"
               alt="bezal"
@@ -269,7 +325,7 @@ const RightBar = () => {
                 width="79"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"

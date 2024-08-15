@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { useState } from "react";
 
 const LeftBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
