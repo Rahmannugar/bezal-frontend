@@ -160,7 +160,11 @@ const Navbar = () => {
         </Popover>
         <button
           onClick={handlePopoverOpen}
-          className="flex justify-center items-center space-x-2 rounded-[10px]  border-none w-[150px] h-[40px] bg-[#f7f6f6] text-[#585858]"
+          className={`flex justify-center items-center space-x-2 rounded-[10px] ${
+            mode
+              ? "border-none bg-[#f7f6f6] text-[#585858]"
+              : "bg-transparent text-white border"
+          } w-[160px] h-[47px]`}
         >
           <h1>{user.userName}</h1>
 
@@ -169,7 +173,10 @@ const Navbar = () => {
               width="14"
               height="7"
               viewBox="0 0 14 7"
-              fill="none"
+              fill=""
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
               xmlns="http://www.w3.org/2000/svg"
             >
               <path d="M1 1L7.28571 6L13 1" stroke="#585858" />
