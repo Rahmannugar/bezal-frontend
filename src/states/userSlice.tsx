@@ -14,6 +14,7 @@ export interface UserState {
     userFollows: string[];
   };
   isLoggedIn: boolean;
+  mode: boolean;
 }
 
 const initialState: UserState = {
@@ -30,6 +31,7 @@ const initialState: UserState = {
     userFollows: [],
   },
   isLoggedIn: false,
+  mode: true,
 };
 
 const userSlice = createSlice({
@@ -45,8 +47,11 @@ const userSlice = createSlice({
       state.user = initialState.user;
       state.isLoggedIn = false;
     },
+    setMode(state) {
+      state.mode = !state.mode;
+    },
   },
 });
 
-export const { setUser, resetUser } = userSlice.actions;
+export const { setUser, resetUser, setMode } = userSlice.actions;
 export default userSlice.reducer;

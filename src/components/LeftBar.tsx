@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
+import { useState } from "react";
 
 const LeftBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -7,10 +8,17 @@ const LeftBar = () => {
     user.userName.trim().length > 6
       ? user.userName.trim().slice(0, 6) + "..."
       : user.userName.trim();
+
+  const mode = useSelector((state: RootState) => state.user.mode);
+
   return (
     <div className="px-5 pt-10">
       {/* top left side bar */}
-      <div className="min-w-[238px] w-[20vw] max-w-[100%] h-auto py-8 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={`min-w-[238px] ${
+          mode ? "bg-white" : "bg-transparent border"
+        } w-[20vw] max-w-[100%] h-auto py-8 shadow-md rounded-[20px] flex flex-col space-y-5`}
+      >
         {/* individual icons */}
 
         {/* home */}
@@ -22,7 +30,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <g clip-path="url(#clip0_1_354)">
                 <path
@@ -37,7 +47,11 @@ const LeftBar = () => {
               </defs>
             </svg>
           </div>
-          <h1 className="font-semibold text-[20px] text-[#5D5F63] group-hover:text-[#4385F5]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Home
           </h1>
         </a>
@@ -51,7 +65,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <g clip-path="url(#clip0_1_358)">
                 <path
@@ -70,7 +86,11 @@ const LeftBar = () => {
               </defs>
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Chat
           </h1>
         </a>
@@ -84,7 +104,9 @@ const LeftBar = () => {
               viewBox="0 0 20 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <path
                 d="M6 8C7.93437 8 9.5 6.43437 9.5 4.5C9.5 2.56562 7.93437 1 6 1C4.06563 1 2.5 2.56562 2.5 4.5C2.5 6.43437 4.06563 8 6 8ZM8.4 9H8.14062C7.49062 9.3125 6.76875 9.5 6 9.5C5.23125 9.5 4.5125 9.3125 3.85938 9H3.6C1.6125 9 0 10.6125 0 12.6V13.5C0 14.3281 0.671875 15 1.5 15H10.5C11.3281 15 12 14.3281 12 13.5V12.6C12 10.6125 10.3875 9 8.4 9ZM15 8C16.6562 8 18 6.65625 18 5C18 3.34375 16.6562 2 15 2C13.3438 2 12 3.34375 12 5C12 6.65625 13.3438 8 15 8ZM16.5 9H16.3813C15.9469 9.15 15.4875 9.25 15 9.25C14.5125 9.25 14.0531 9.15 13.6187 9H13.5C12.8625 9 12.275 9.18437 11.7594 9.48125C12.5219 10.3031 13 11.3938 13 12.6V13.8C13 13.8688 12.9844 13.9344 12.9812 14H18.5C19.3281 14 20 13.3281 20 12.5C20 10.5656 18.4344 9 16.5 9Z"
@@ -92,7 +114,11 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Group
           </h1>
         </a>
@@ -106,7 +132,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-black"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <path
                 d="M10 11.25C10.6904 11.25 11.25 10.6904 11.25 10C11.25 9.30964 10.6904 8.75 10 8.75C9.30964 8.75 8.75 9.30964 8.75 10C8.75 10.6904 9.30964 11.25 10 11.25Z"
@@ -118,14 +146,22 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Settings
           </h1>
         </a>
       </div>
 
       {/* middle left bar */}
-      <div className="min-w-[238px] w-[20vw] max-w-[100%] h-auto py-7 mt-10 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={`min-w-[238px] mt-10 ${
+          mode ? "bg-white" : "bg-transparent border"
+        } w-[20vw] max-w-[100%] h-auto py-8 shadow-md rounded-[20px] flex flex-col space-y-5`}
+      >
         {/* individual icons */}
         {/* Wallet */}
         <a href="/" className="flex group items-center px-10 space-x-5">
@@ -136,7 +172,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <path
                 d="M18.75 9.375V7.5C18.75 6.80961 18.1903 6.25 17.5 6.25H3.75C3.06063 6.25 2.5 5.68937 2.5 5C2.5 4.31063 3.06063 3.75 3.75 3.75H17.5C18.1903 3.75 18.75 3.19031 18.75 2.5C18.75 1.80969 18.1903 1.25 17.5 1.25H3.75C1.68211 1.25 0 2.93215 0 5V6.25V16.25C0 17.6307 1.11937 18.75 2.5 18.75H17.5C18.1903 18.75 18.75 18.1904 18.75 17.5V15.625C19.4403 15.625 20 15.0654 20 14.375V10.625C20 9.93461 19.4403 9.375 18.75 9.375ZM16.875 13.75C16.1847 13.75 15.625 13.1904 15.625 12.5C15.625 11.8096 16.1847 11.25 16.875 11.25C17.5653 11.25 18.125 11.8096 18.125 12.5C18.125 13.1904 17.5653 13.75 16.875 13.75Z"
@@ -144,7 +182,11 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="font-semibold text-[20px] text-[#5D5F63] group-hover:text-[#4385F5]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Wallet
           </h1>
         </a>
@@ -158,7 +200,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <path
                 d="M17 8H18V19H2V8H3V6C3 3.24 5.24 1 8 1C8.71 1 9.39 1.15 10 1.42C10.6301 1.14213 11.3113 0.99907 12 1C14.76 1 17 3.24 17 6V8ZM5 6V8H7V6C7 4.87 7.39 3.84 8.02 3H8C6.35 3 5 4.35 5 6ZM15 8V6C15 4.35 13.65 3 12 3H11.98C12.6376 3.86228 12.9957 4.91562 13 6V8H15ZM10 3.78C9.39 4.33 9 5.12 9 6V8H11V6C11 5.12 10.61 4.33 10 3.78Z"
@@ -166,7 +210,11 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Products
           </h1>
         </a>
@@ -180,16 +228,30 @@ const LeftBar = () => {
               className="w-[20px] h-[20px] rounded-full"
             />
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] pl-5 font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold pl-5 text-[20px] group-hover:text-[#4385F5]`}
+          >
             @{trimmedUserName}
           </h1>
         </a>
       </div>
 
       {/* Explore and Bottom left bar */}
-      <h1 className="text-[20px] 2xl:text-3xl text-[#AAAAAA] mt-7">Explore</h1>
+      <h1
+        className={`text-[20px] 2xl:text-3xl ${
+          mode ? "text-[#AAAAAA]" : "text-white"
+        } mt-7`}
+      >
+        Explore
+      </h1>
 
-      <div className="min-w-[238px] w-[20vw] max-w-[100%] h-auto py-7 mt-7 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={`min-w-[238px] mt-7 ${
+          mode ? "bg-white" : "bg-transparent border"
+        } w-[20vw] max-w-[100%] h-auto py-8 shadow-md rounded-[20px] flex flex-col space-y-5`}
+      >
         {/* individual icons */}
         {/* Offers */}
         <a href="/" className="flex group items-center px-10 space-x-5">
@@ -199,7 +261,9 @@ const LeftBar = () => {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -208,7 +272,11 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="font-semibold text-[20px] text-[#5D5F63] group-hover:text-[#4385F5]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Offers
           </h1>
         </a>
@@ -222,7 +290,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <g clip-path="url(#clip0_1_396)">
                 <path
@@ -249,7 +319,11 @@ const LeftBar = () => {
               </defs>
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Jobs
           </h1>
         </a>
@@ -263,7 +337,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <path
                 d="M18.7671 7.61445L17.3017 2.18982C17.2566 2.0241 17.1872 1.86759 17.1037 1.72022C17.2277 1.54275 17.3017 1.32772 17.3017 1.0948C17.3017 0.490026 16.8112 0 16.2069 0H3.66558C3.0609 0 2.57105 0.490252 2.57105 1.0948C2.57105 1.39736 2.69343 1.6711 2.89224 1.86945C2.81062 2.01397 2.74315 2.1679 2.69917 2.33028L1.23389 7.75491C1.03554 8.48934 1.32369 9.1092 1.88823 9.25685V20H18.2045V9.08073C18.7051 8.89101 18.9536 8.30626 18.7671 7.61445ZM14.0668 3.09883L15.305 7.6821C15.324 7.75346 15.3525 7.82184 15.3797 7.89044C14.8267 8.79579 14.0232 9.18897 13.1478 8.97123C12.3793 8.78056 11.8431 8.19079 11.8315 7.77249V3.31006C11.8315 3.23784 11.8206 3.1682 11.8099 3.09887H14.0668V3.09883ZM4.69607 7.82279L5.97204 3.09883H8.12055C8.10966 3.1682 8.09904 3.2378 8.09904 3.31001V7.85632L8.09628 7.85497C7.58542 8.82128 6.79582 9.25256 5.93096 9.03766C5.21407 8.85987 4.71428 8.30631 4.71428 7.92113H4.66036C4.6718 7.88796 4.68689 7.85655 4.69607 7.82279ZM13.592 18.8849H4.78925V15.3639H6.36897C6.52036 15.0222 6.86116 14.7833 7.25922 14.7833C7.65665 14.7833 7.9979 15.0222 8.14902 15.3639H11.3641C11.4093 14.8679 11.8218 14.4781 12.3297 14.4781C12.8372 14.4781 13.2499 14.8679 13.2949 15.3639H13.5921V18.8849H13.592ZM6.60176 14.0963C6.60176 13.7174 6.90939 13.4099 7.28846 13.4099C7.66754 13.4099 7.9749 13.7175 7.9749 14.0963C7.9749 14.4758 7.66754 14.7833 7.28846 14.7833C6.90939 14.7833 6.60176 14.4758 6.60176 14.0963ZM11.6722 13.7912C11.6722 13.4123 11.9796 13.1047 12.3586 13.1047C12.7378 13.1047 13.0452 13.4123 13.0452 13.7912C13.0452 14.1705 12.7378 14.4781 12.3586 14.4781C11.9796 14.4781 11.6722 14.1705 11.6722 13.7912ZM17.3596 19.155H16.2798V12.0309H3.88571V19.155H2.7333V9.30299L2.98136 9.30778C3.56841 9.31967 4.18073 8.87854 4.51236 8.26545C4.70181 8.7238 5.23255 9.15485 5.86358 9.31144C5.98677 9.34195 6.15887 9.37186 6.3607 9.37186C6.85796 9.37186 7.53481 9.18897 8.10112 8.38725C8.11179 9.15128 8.73617 9.49538 9.50752 9.49538H10.4229C11.0882 9.49538 11.6419 9.03283 11.7898 8.41287C12.0622 8.78761 12.5381 9.11047 13.0804 9.24478C13.2122 9.27764 13.3969 9.30959 13.6128 9.30959C14.1591 9.30959 14.9069 9.1027 15.5232 8.18799C15.8614 8.76791 16.4525 9.17817 17.0195 9.1671L17.3596 9.1605V19.155Z"
@@ -271,7 +347,11 @@ const LeftBar = () => {
               />
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             MarketPlace
           </h1>
         </a>
@@ -285,7 +365,9 @@ const LeftBar = () => {
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:fill-[#4385F5] fill-[#5D5F63]"
+              className={`group-hover:fill-[#4385F5] ${
+                mode ? "fill-[#5D5F63]" : "fill-[#FFFFFF]"
+              }`}
             >
               <g clip-path="url(#clip0_1_412)">
                 <path
@@ -300,7 +382,11 @@ const LeftBar = () => {
               </defs>
             </svg>
           </div>
-          <h1 className="text-[#5D5F63] group-hover:text-[#4385F5] font-semibold text-[20px]">
+          <h1
+            className={`${
+              mode ? "text-[#5D5F63]" : "text-white"
+            } font-semibold text-[20px] group-hover:text-[#4385F5]`}
+          >
             Pages
           </h1>
         </a>
