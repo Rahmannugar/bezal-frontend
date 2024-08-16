@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import { useSelector } from "react-redux";
 import { RootState } from "./states/store";
 import Login from "./pages/Login";
+import UserProfile from "./pages/UserProfile";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -20,6 +21,7 @@ const App = () => {
   });
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const user = useSelector((state: RootState) => state.user.user);
 
   return (
     <ThemeProvider theme={theme}>
@@ -33,6 +35,7 @@ const App = () => {
           path="/login"
           element={isLoggedIn ? <Navigate to="/" /> : <Login />}
         />
+        <Route path={`/${user.userName}`} element={<UserProfile />} />
         <Route path="/forgotPassword" element={<ResetPassword />} />
       </Routes>
     </ThemeProvider>

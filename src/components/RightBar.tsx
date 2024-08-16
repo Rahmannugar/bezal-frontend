@@ -368,7 +368,11 @@ const RightBar = () => {
       </div>
 
       {/* group bar */}
-      <div className="min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 bg-white shadow-md rounded-[20px] flex flex-col space-y-5">
+      <div
+        className={`${
+          mode ? "bg-white" : "bg-transparent border"
+        } min-w-[280px] w-[20vw] max-w-[100%] px-3 h-auto py-4 shadow-md rounded-[20px] flex flex-col space-y-5`}
+      >
         {/* top menu */}
         <div className="flex justify-between items-center">
           {/* left top menu */}
@@ -385,7 +389,13 @@ const RightBar = () => {
                 fill="#4385F5"
               />
             </svg>
-            <h1 className="text-[#000000] font-semibold">Groups</h1>
+            <h1
+              className={`${
+                mode ? "text-[#000000]" : "text-white"
+              } font-semibold`}
+            >
+              Groups
+            </h1>
           </div>
           <button className="text-[#4385F5]">See more</button>
         </div>
@@ -401,8 +411,20 @@ const RightBar = () => {
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />
             <div>
-              <h1 className="font-semibold text-[#5D5F63]">Crypto</h1>
-              <h2 className="text-[#AAAAAA] text-sm">33k members</h2>
+              <h1
+                className={`font-semibold ${
+                  mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+                }`}
+              >
+                Crypto
+              </h1>
+              <h2
+                className={`${
+                  mode ? " text-[#AAAAAA]" : "text-[#cdcdcd]"
+                } text-sm`}
+              >
+                33k members
+              </h2>
             </div>
           </div>
 
@@ -421,7 +443,7 @@ const RightBar = () => {
                 width="79"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"
@@ -471,8 +493,20 @@ const RightBar = () => {
               className="w-[40px] h-[40px] mt-[-10px] rounded-full"
             />
             <div>
-              <h1 className="font-semibold text-[#5D5F63]">EveryDay group</h1>
-              <h2 className="text-[#AAAAAA] text-sm">20k members</h2>
+              <h1
+                className={`font-semibold ${
+                  mode ? "text-[#5D5F63]" : "text-[#cdcdcd]"
+                }`}
+              >
+                EveryDay group
+              </h1>
+              <h2
+                className={`${
+                  mode ? " text-[#AAAAAA]" : "text-[#cdcdcd]"
+                } text-sm`}
+              >
+                20k members
+              </h2>
             </div>
           </div>
 
@@ -491,7 +525,7 @@ const RightBar = () => {
                 width="79"
                 height="39"
                 rx="9.5"
-                fill="white"
+                fill={`${mode ? "white" : ""}`}
               />
               <rect
                 x="0.5"

@@ -9,6 +9,7 @@ export interface UserState {
     profileImage: string;
     coverImage: string;
     email: string;
+    bio: string;
     userPosts: string[];
     userFollowers: string[];
     userFollows: string[];
@@ -26,6 +27,7 @@ const initialState: UserState = {
     profileImage: "",
     coverImage: "",
     email: "",
+    bio: "",
     userPosts: [],
     userFollowers: [],
     userFollows: [],

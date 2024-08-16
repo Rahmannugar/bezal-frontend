@@ -219,7 +219,10 @@ const LeftBar = () => {
         </a>
 
         {/* User profile */}
-        <a href="/" className="flex items-center px-10  group">
+        <a
+          href={`/${user.userName}`}
+          className="flex items-center px-10  group"
+        >
           <div>
             <img
               src="https://i.ibb.co/KsMc2Qn/bezal.png"

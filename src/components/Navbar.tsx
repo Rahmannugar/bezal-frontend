@@ -35,9 +35,10 @@ const Navbar = () => {
 
   //log user out function
   const handleResetUser = () => {
-    dispatch(resetUser());
     setOpenSnackbar(true);
+    dispatch(resetUser());
     setTimeout(() => {
+      dispatch(resetUser());
       navigate("/login");
     }, 2000);
   };
@@ -142,9 +143,14 @@ const Navbar = () => {
             vertical: "top",
             horizontal: "center",
           }}
+          sx={{
+            "& .MuiPaper-root": {
+              backgroundColor: mode ? "#000000" : "#ffffff",
+            },
+          }}
         >
-          <div className="px-7 py-7 rounded-xl space-y-5 flex flex-col">
-            <Link to="/userprofile">
+          <div className={` px-7 py-7 rounded-xl space-y-5 flex flex-col`}>
+            <Link to={`/${user.userName}`}>
               <button className="text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-200 h-[40px] w-[90px] rounded-[10px]">
                 Profile
               </button>

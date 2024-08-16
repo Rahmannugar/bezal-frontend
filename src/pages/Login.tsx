@@ -1,19 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../states/userSlice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
-import { RootState } from "../states/store";
 
 const Login = () => {
   const dispatch = useDispatch();
   // form inputs
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  //login logic
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   // response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -81,11 +77,11 @@ const Login = () => {
       });
 
       if (response.status === 201) {
-        dispatch(setUser(response.data));
+        setOpenSnackbar(true);
         setResponseMessage("Login successful!");
         setResponseSeverity("success");
-        setOpenSnackbar(true);
         setTimeout(() => {
+          dispatch(setUser(response.data));
           navigate("/");
         }, 2000);
       }
@@ -98,16 +94,6 @@ const Login = () => {
       setResponseSeverity("error");
     }
   };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      const timer = setTimeout(() => {
-        navigate("/");
-      }, 2000); // Delay of 2 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [isLoggedIn, navigate]);
 
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
