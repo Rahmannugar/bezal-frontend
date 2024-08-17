@@ -3,6 +3,8 @@ import LeftBar from "../components/LeftBar";
 import Navbar from "../components/Navbar";
 import { RootState } from "../states/store";
 import { useTheme } from "@mui/material";
+import EditProfile from "../components/EditProfile";
+import { useState } from "react";
 
 const UserProfile = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -10,6 +12,14 @@ const UserProfile = () => {
   const theme = useTheme();
 
   const handleCoverImageUpload = () => {};
+
+  //editing user data
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleEditProfileClick = () => {
+    setIsDialogOpen(!isDialogOpen);
+  };
+
   return (
     <div
       style={{
@@ -20,7 +30,6 @@ const UserProfile = () => {
       }}
     >
       <Navbar />
-
       <div className="flex space-x-5">
         <LeftBar />
         <div>
@@ -83,6 +92,7 @@ const UserProfile = () => {
                 </div>
                 <div>
                   <button
+                    onClick={handleEditProfileClick}
                     className={`mt-3 hover:text-[#4385F5] duration-100 ${
                       mode ? "text-black" : "text-white"
                     }`}
@@ -94,7 +104,7 @@ const UserProfile = () => {
             </div>
 
             {/* other info */}
-            <div className="flex items-center space-x-10">
+            <div className="flex items-center space-x-16 pl-10">
               {/* location */}
               <div className="flex items-center space-x-2">
                 <svg
@@ -177,6 +187,16 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+
+      {isDialogOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <EditProfile
+            user={user}
+            isDialogOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };
