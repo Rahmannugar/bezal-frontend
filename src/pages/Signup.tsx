@@ -11,6 +11,7 @@ const Signup = () => {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [dateOfBirth, setDateBirth] = useState<string>("");
+  const [isDatePublic, setIsDatePublic] = useState(false);
   const [password, setPassword] = useState<string>("");
   const [rePassword, setRePassword] = useState<string>("");
 
@@ -43,7 +44,10 @@ const Signup = () => {
 
   const handleDateOfBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateBirth(e.target.value);
-    console.log(dateOfBirth);
+  };
+
+  const handlePublicChange = () => {
+    setIsDatePublic(!isDatePublic);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +111,7 @@ const Signup = () => {
           email: email,
           password: password,
           dateOfBirth: dateOfBirth,
+          isDatePublic: isDatePublic,
         },
       });
       if (response.status === 201) {
@@ -199,6 +204,15 @@ const Signup = () => {
             value={dateOfBirth}
             onChange={handleDateOfBirthChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
+          />
+        </div>
+
+        <div className="mt-[-10px]">
+          <FormControlLabel
+            checked={isDatePublic}
+            onChange={handlePublicChange}
+            control={<Checkbox />}
+            label="Make public"
           />
         </div>
 

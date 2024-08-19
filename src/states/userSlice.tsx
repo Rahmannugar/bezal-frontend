@@ -10,7 +10,8 @@ export interface UserState {
     coverImage: string;
     email: string;
     bio: string;
-    dateOfBirth: Date | null;
+    dateOfBirth: string;
+    isDatePublic: boolean;
     userPosts: string[];
     userFollowers: string[];
     userFollows: string[];
@@ -29,7 +30,8 @@ const initialState: UserState = {
     coverImage: "",
     email: "",
     bio: "",
-    dateOfBirth: null,
+    dateOfBirth: "",
+    isDatePublic: false,
     userPosts: [],
     userFollowers: [],
     userFollows: [],

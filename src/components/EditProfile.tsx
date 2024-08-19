@@ -1,6 +1,5 @@
+import { Checkbox, FormControlLabel } from "@mui/material";
 import { useRef, useState } from "react";
-import { RootState } from "../states/store";
-import { useSelector } from "react-redux";
 
 interface EditProfileProps {
   user: {
@@ -10,6 +9,7 @@ interface EditProfileProps {
     location: string;
     profileImage: string;
     coverImage: string;
+    isDatePublic: boolean;
     email: string;
     bio: string;
     userPosts: string[];
@@ -26,34 +26,48 @@ const EditProfile: React.FC<EditProfileProps> = ({
   isDialogOpen,
 }) => {
   const [newFirstName, setNewFirstName] = useState(user.firstName);
-  const [newLastName, setNewLastName] = useState(user.firstName);
-  const [newUserName, setNewUserName] = useState(user.firstName);
+  const [newLastName, setNewLastName] = useState(user.lastName);
+  const [newUserName, setNewUserName] = useState(user.userName);
   const [newProfileImage, setNewProfileImage] = useState(user.profileImage);
   const [newCoverImage, setNewCoverImage] = useState(user.coverImage);
   const [newLocation, setNewLocation] = useState(user.location);
   const [newBio, setNewBio] = useState(user.bio);
+  const [isDatePublic, setIsDatePublic] = useState(user.isDatePublic);
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const profileInputRef = useRef<HTMLInputElement | null>(null);
+  const coverInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewFirstName(e.target.value);
   };
-
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewFirstName(e.target.value);
+    setNewLastName(e.target.value);
+  };
+  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewUserName(e.target.value);
+  };
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewLocation(e.target.value);
+  };
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewBio(e.target.value);
+  };
+
+  const handlePublicChange = () => {
+    setIsDatePublic(!isDatePublic);
   };
 
   const handleCoverImageUpload = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    if (coverInputRef.current) {
+      coverInputRef.current.click();
     }
   };
 
   const handleImageUpload = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    if (profileInputRef.current) {
+      profileInputRef.current.click();
     }
   };
 
@@ -72,7 +86,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
         }
       };
       reader.readAsDataURL(file);
-      console.log(reader);
     }
   };
 
@@ -107,6 +120,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   type="text"
                   className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                   placeholder={newFirstName}
+                  onChange={handleFirstNameChange}
                 />
                 <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
               </div>
@@ -120,6 +134,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   type="text"
                   className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                   placeholder={newLastName}
+                  onChange={handleLastNameChange}
                 />
                 <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
               </div>
@@ -133,6 +148,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   type="text"
                   className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                   placeholder={newUserName}
+                  onChange={handleUserNameChange}
                 />
                 <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
               </div>
@@ -146,6 +162,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   type="text"
                   className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                   placeholder={newLocation}
+                  onChange={handleLocationChange}
                 />
                 <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
               </div>
@@ -158,6 +175,16 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 <textarea
                   className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 resize-none"
                   placeholder={newBio}
+                  onChange={handleBioChange}
+                />
+              </div>
+
+              <div className="mt-[-10px]">
+                <FormControlLabel
+                  checked={isDatePublic}
+                  onChange={handlePublicChange}
+                  control={<Checkbox />}
+                  label="Make date of birth public"
                 />
               </div>
 
@@ -169,7 +196,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 <div className="relative">
                   <input
                     type="file"
-                    ref={fileInputRef}
+                    ref={coverInputRef}
                     className="hidden"
                     onChange={(e) => handleFileChange(e, "cover")}
                   />
@@ -182,7 +209,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   />
 
                   {/* cover-image button */}
-                  <div>
+                  <div className="relative">
                     <button
                       className="absolute z-10 left-36 bottom-14"
                       onClick={handleCoverImageUpload}
@@ -226,7 +253,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 <div className="relative">
                   <input
                     type="file"
-                    ref={fileInputRef}
+                    ref={profileInputRef}
                     className="hidden"
                     onChange={(e) => handleFileChange(e, "profile")}
                   />

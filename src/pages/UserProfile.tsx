@@ -30,13 +30,13 @@ const UserProfile = () => {
       <Navbar />
       <div className="flex space-x-5">
         <LeftBar />
-        <div>
-          {/* cover image  */}
+        <div className="w-full px-10">
+          {/* cover image */}
           <div className="relative">
             <img
               src={user.coverImage}
               alt="user-cover-image"
-              className="min-w-[900px] max-w-[100%] h-[343px] mt-5 object-cover rounded-b-[20px]"
+              className="min-w-[700px] w-full max-w-[100%] h-[343px] mt-5 object-cover rounded-b-[20px]"
             />
             <button onClick={handleEditProfileClick}>
               <svg
@@ -61,7 +61,7 @@ const UserProfile = () => {
             {/* profile image  */}
             <div className="flex space-x-4">
               <img
-                className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full w-[150px] h-[150px] border-[8px] ${
+                className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full min-w-[150px] max-w-[30%] w-full min-h-[150px] max-h-[30%] border-[8px] ${
                   mode ? "border-[#FAFAFA]" : "border-black"
                 }`}
                 src={user.profileImage}
@@ -88,6 +88,7 @@ const UserProfile = () => {
                     {/* {user.bio} */}Hello guys
                   </h1>
                 </div>
+
                 <div>
                   <button
                     onClick={handleEditProfileClick}
@@ -100,9 +101,19 @@ const UserProfile = () => {
                 </div>
               </div>
             </div>
-
+            {user.isDatePublic ? (
+              <h1
+                className={`mt-[-100px] 2xl:mt-[-200px] mb-5 ${
+                  mode ? "text-black" : "text-white"
+                } text-center`}
+              >
+                Date of Birth: {user.dateOfBirth}
+              </h1>
+            ) : (
+              ""
+            )}
             {/* other info */}
-            <div className="flex items-center space-x-16 pl-10">
+            <div className="flex items-center space-x-16 justify-center">
               {/* location */}
               <div className="flex items-center space-x-2">
                 <svg
@@ -121,7 +132,6 @@ const UserProfile = () => {
                   Nigeria
                 </h1>
               </div>
-
               {/* posts */}
               <div className="flex items-center space-x-2">
                 <svg
@@ -141,7 +151,6 @@ const UserProfile = () => {
                   {user.userPosts.length} posts
                 </h1>
               </div>
-
               {/*follows */}
               <div className="flex items-center space-x-2">
                 <svg
@@ -161,7 +170,6 @@ const UserProfile = () => {
                   {user.userFollows.length} follows
                 </h1>
               </div>
-
               {/*followers */}
               <div className="flex items-center space-x-2">
                 <svg
