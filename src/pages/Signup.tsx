@@ -10,6 +10,7 @@ const Signup = () => {
   const [lastName, setLastName] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [dateOfBirth, setDateBirth] = useState<Date>();
   const [password, setPassword] = useState<string>("");
   const [rePassword, setRePassword] = useState<string>("");
 
@@ -38,6 +39,10 @@ const Signup = () => {
   };
   const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
+  };
+
+  const handleDateOfBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateBirth(e.target.value);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,6 +181,21 @@ const Signup = () => {
             name="userName"
             value={userName}
             onChange={handleUserNameChange}
+            className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
+          />
+        </div>
+
+        <div className="space-y-2 mb-5">
+          <label htmlFor="email" className="font-semibold leading-6">
+            Date of Birth*
+          </label>
+          <input
+            type="date"
+            placeholder=""
+            name="dateOfBirth"
+            required
+            value={dateOfBirth}
+            onChange={handleDateOfBirthChange}
             className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
           />
         </div>

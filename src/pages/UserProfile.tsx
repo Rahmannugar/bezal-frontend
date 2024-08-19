@@ -11,8 +11,6 @@ const UserProfile = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const theme = useTheme();
 
-  const handleCoverImageUpload = () => {};
-
   //editing user data
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -40,7 +38,7 @@ const UserProfile = () => {
               alt="user-cover-image"
               className="min-w-[900px] max-w-[100%] h-[343px] mt-5 object-cover rounded-b-[20px]"
             />
-            <button onClick={handleCoverImageUpload}>
+            <button onClick={handleEditProfileClick}>
               <svg
                 className="absolute top-7 left-5"
                 width="40"

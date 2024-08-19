@@ -22,6 +22,7 @@ const App = () => {
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
+  console.log(user._id);
 
   return (
     <ThemeProvider theme={theme}>
