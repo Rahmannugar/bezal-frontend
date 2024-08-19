@@ -1,5 +1,16 @@
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Alert, Checkbox, FormControlLabel, Snackbar } from "@mui/material";
 import { useRef, useState } from "react";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../storage/Firebase";
+import { setUser } from "../states/userSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios, { AxiosError } from "axios";
 
 interface EditProfileProps {
   user: {
@@ -89,14 +100,96 @@ const EditProfile: React.FC<EditProfileProps> = ({
     }
   };
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  //response logic
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [responseSeverity, setResponseSeverity] = useState<
+    "success" | "error"
+  >();
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  //backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  //   update user data
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("hello");
+
+    if (!profileInputRef.current?.files || !coverInputRef.current?.files)
+      return;
+
+    const profileFile = profileInputRef.current.files[0];
+    const coverFile = coverInputRef.current.files[0];
+
+    // Function to upload image to Firebase and get URL
+    const uploadImageAndGetUrl = async (file: File) => {
+      const storageRef = ref(storage, `images/${file.name}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    };
+
+    try {
+      // Upload images and get URLs
+      const profileImageUrl = profileFile
+        ? await uploadImageAndGetUrl(profileFile)
+        : undefined;
+      const coverImageUrl = coverFile
+        ? await uploadImageAndGetUrl(coverFile)
+        : undefined;
+
+      // Prepare user data
+      const userData = {
+        firstName: newFirstName || user.firstName,
+        lastName: newLastName || user.lastName,
+        userName: newUserName || user.userName,
+        location: newLocation || user.location,
+        bio: newBio || user.bio,
+        isDatePublic,
+        profileImage: profileImageUrl || user.profileImage,
+        coverImage: coverImageUrl || user.coverImage,
+      };
+
+      const response = await axios.patch(
+        `${backendURL}/users/${user._id}`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        dispatch(setUser(response.data));
+        setOpenSnackbar(true);
+        setResponseMessage("User profile updated successfully!");
+        setResponseSeverity("success");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+    } catch (error) {
+      // Error handling
+      const err = error as AxiosError;
+      const errorTextContent: any = err.response?.data;
+      setResponseMessage(errorTextContent.message);
+      setOpenSnackbar(true);
+      setResponseSeverity("error");
+    }
   };
+
   return (
     <div>
       {isDialogOpen && (
         <form
+          onSubmit={handleUpdateProfile}
           onClick={onClose}
           data-dialog-backdrop="sign-in-dialog"
           className="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 backdrop-blur-sm transition-opacity duration-300"
@@ -306,21 +399,31 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   </div>
                 </div>
               </div>
-
-              {/* all done */}
             </div>
 
             {/* submit */}
             <div className="p-6 pt-0 mt-[-50px]">
               <button
-                className="block w-full select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                className="block w-full select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-5 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="submit"
-                onClick={handleUpdateProfile}
               >
                 Submit
               </button>
             </div>
           </div>
+
+          {/* Alert logic */}
+          {responseMessage && (
+            <Snackbar open={openSnackbar} autoHideDuration={6000}>
+              <Alert
+                onClose={handleCloseSnackbar}
+                variant="filled"
+                severity={responseSeverity}
+              >
+                {responseMessage}
+              </Alert>
+            </Snackbar>
+          )}
         </form>
       )}
     </div>

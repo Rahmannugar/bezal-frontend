@@ -61,7 +61,7 @@ const UserProfile = () => {
             {/* profile image  */}
             <div className="flex space-x-4">
               <img
-                className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full min-w-[150px] max-w-[30%] w-full min-h-[150px] max-h-[30%] border-[8px] ${
+                className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full min-w-[150px] min-h-[150px] border-[8px] ${
                   mode ? "border-[#FAFAFA]" : "border-black"
                 }`}
                 src={user.profileImage}
@@ -85,7 +85,7 @@ const UserProfile = () => {
                   </div>
                   {/* user bio */}
                   <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
-                    {/* {user.bio} */}Hello guys
+                    {user.bio}
                   </h1>
                 </div>
 
@@ -103,7 +103,7 @@ const UserProfile = () => {
             </div>
             {user.isDatePublic ? (
               <h1
-                className={`mt-[-100px] 2xl:mt-[-200px] mb-5 ${
+                className={`mt-[-100px] mb-5 ${
                   mode ? "text-black" : "text-white"
                 } text-center`}
               >
@@ -129,7 +129,7 @@ const UserProfile = () => {
                   />
                 </svg>
                 <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
-                  Nigeria
+                  {user.location}
                 </h1>
               </div>
               {/* posts */}
