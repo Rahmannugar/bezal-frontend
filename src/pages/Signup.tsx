@@ -10,7 +10,7 @@ const Signup = () => {
   const [lastName, setLastName] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [dateOfBirth, setDateBirth] = useState<Date>();
+  const [dateOfBirth, setDateBirth] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rePassword, setRePassword] = useState<string>("");
 
@@ -43,6 +43,7 @@ const Signup = () => {
 
   const handleDateOfBirthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateBirth(e.target.value);
+    console.log(dateOfBirth);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,6 +106,7 @@ const Signup = () => {
           userName: userName,
           email: email,
           password: password,
+          dateOfBirth: dateOfBirth,
         },
       });
       if (response.status === 201) {

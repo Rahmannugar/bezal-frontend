@@ -61,7 +61,7 @@ const UserProfile = () => {
             {/* profile image  */}
             <div className="flex space-x-4">
               <img
-                className={` ml-[20px] transform -translate-y-1/2 rounded-full w-[150px] h-[150px] border-[8px] ${
+                className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full w-[150px] h-[150px] border-[8px] ${
                   mode ? "border-[#FAFAFA]" : "border-black"
                 }`}
                 src={user.profileImage}
