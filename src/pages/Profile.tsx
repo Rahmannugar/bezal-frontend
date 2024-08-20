@@ -67,8 +67,9 @@ const Profile = () => {
     try {
       const response = await axios.put(
         `${backendURL}/users/${userName}/follow`,
+        {},
         {
-          loggedInUserName: loggedInUser?.userName,
+          withCredentials: true,
         }
       );
 
@@ -85,7 +86,12 @@ const Profile = () => {
         dispatch(setUser(updatedLoggedInUser));
       }
     } catch (error) {
-      console.error("Failed to follow/unfollow the user", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Error message:", error.message);
+        console.error("Error details:", error.response?.data);
+      } else {
+        console.error("Unexpected error:", error);
+      }
     }
   };
 
@@ -213,7 +219,9 @@ const Profile = () => {
                       <h1
                         className={`mt-1 ${mode ? "text-black" : "text-white"}`}
                       >
-                        {user.userPosts.length} posts
+                        {user.userPosts.length === 1
+                          ? `${user.userPosts.length} post`
+                          : `${user.userPosts.length} posts`}
                       </h1>
                     </div>
                     {/*follows */}
@@ -234,7 +242,9 @@ const Profile = () => {
                       <h1
                         className={`mt-1 ${mode ? "text-black" : "text-white"}`}
                       >
-                        {user.userFollows.length} follows
+                        {user.userFollows.length === 1
+                          ? `${user.userFollows.length} follow`
+                          : `${user.userFollows.length} follows`}
                       </h1>
                     </div>
                     {/*followers */}
@@ -255,7 +265,9 @@ const Profile = () => {
                       <h1
                         className={`mt-1 ${mode ? "text-black" : "text-white"}`}
                       >
-                        {user.userFollowers.length} followers
+                        {user.userFollowers.length === 1
+                          ? `${user.userFollowers.length} follower`
+                          : `${user.userFollowers.length} followers`}
                       </h1>
                     </div>
                   </div>

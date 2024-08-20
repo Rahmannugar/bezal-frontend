@@ -148,7 +148,9 @@ const UserProfile = () => {
                 </svg>
 
                 <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
-                  {user.userPosts.length} posts
+                  {user.userPosts.length === 1
+                    ? `${user.userPosts.length} post`
+                    : `${user.userPosts.length} posts`}
                 </h1>
               </div>
               {/*follows */}
@@ -167,7 +169,9 @@ const UserProfile = () => {
                 </svg>
 
                 <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
-                  {user.userFollows.length} follows
+                  {user.userFollows.length === 1
+                    ? `${user.userFollows.length} follow`
+                    : `${user.userFollows.length} follows`}
                 </h1>
               </div>
               {/*followers */}
@@ -186,7 +190,9 @@ const UserProfile = () => {
                 </svg>
 
                 <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
-                  {user.userFollowers.length} followers
+                  {user.userFollowers.length === 1
+                    ? `${user.userFollowers.length} follower`
+                    : `${user.userFollowers.length} followers`}
                 </h1>
               </div>
             </div>

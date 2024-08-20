@@ -114,7 +114,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
   //   update user data
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("clicked");
 
     if (!profileInputRef.current?.files || !coverInputRef.current?.files)
       return;
@@ -149,7 +148,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
         profileImage: profileImageUrl || user.profileImage,
         coverImage: coverImageUrl || user.coverImage,
       };
-
       const response = await axios.patch(
         `${backendURL}/users/${user._id}`,
         userData,
@@ -160,8 +158,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         dispatch(setUser(response.data));
+        console.log(response.data);
         setOpenSnackbar(true);
         setResponseMessage("User profile updated successfully!");
         setResponseSeverity("success");
