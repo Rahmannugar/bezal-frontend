@@ -3,8 +3,9 @@ import { RootState } from "../states/store";
 import { resetUser, setMode } from "../states/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Popover, Snackbar } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Switch from "./Switch";
+import axios from "axios";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -33,6 +34,24 @@ const Navbar = () => {
     setAnchorEl(null);
   };
 
+  //handle search user menu popup
+  const [searchAnchorEl, setSearchAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+
+  const handleSearchPopoverOpen = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchAnchorEl(event.currentTarget);
+  };
+
+  const handleSearchPopoverClose = () => {
+    setSearchAnchorEl(null);
+  };
+
+  // backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
   //log user out function
   const handleResetUser = () => {
     setOpenSnackbar(true);
@@ -45,8 +64,36 @@ const Navbar = () => {
 
   const open = Boolean(anchorEl);
 
+  const searchOpen = Boolean(searchAnchorEl);
+
   const handleMode = () => {
     dispatch(setMode());
+  };
+
+  //search for users
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        handleFindUsers();
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const handleFindUsers = async () => {
+    try {
+      const response = await axios.get(`${backendURL}/users/search`, {
+        params: { query: searchQuery },
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error searching users:", error);
+    }
   };
 
   return (
@@ -73,7 +120,7 @@ const Navbar = () => {
       </a>
 
       {/* search field */}
-      <div className=" flex justify-start items-center space-x-3 w-[649px] h-[40px] ps-5 py-3  border-[2px] border-gray-300 rounded-[10px] bg-white focus:outline-none focus:text-black focus:shadow-outline">
+      <div className="flex justify-start items-center space-x-3 w-[649px] h-[40px] ps-5 py-3 border-[2px] border-gray-300 rounded-[10px] bg-white">
         <svg
           className="w-4 h-4 text-gray-500"
           aria-hidden="true"
@@ -92,9 +139,56 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search"
-          className="w-full outline-none"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            handleSearchPopoverOpen(e);
+          }}
+          className="w-full outline-none border-none bg-transparent focus:ring-0"
         />
       </div>
+
+      {/* search user popup menu */}
+      <Popover
+        open={searchOpen}
+        anchorEl={searchAnchorEl}
+        onClose={handleSearchPopoverClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        disableAutoFocus
+        disableEnforceFocus
+      >
+        <div className="h-[30vh]">
+          {searchResults.length > 0 ? (
+            searchResults.map((user) => (
+              <button className="hover:bg-gray-300">
+                <div
+                  key={user._id}
+                  className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                  onClick={() => navigate(`/profile/${user._id}`)}
+                >
+                  <img
+                    src={user.profileImage}
+                    alt={`${user.userName}'s profile`}
+                    className="w-[40px] h-[40px] object-cover rounded-full"
+                  />
+                  <div>
+                    <span>{user.userName}</span>
+                  </div>
+                </div>
+              </button>
+            ))
+          ) : (
+            <div className="py-3 w-[400px] px-5">No results found</div>
+          )}
+        </div>
+      </Popover>
 
       {/* notification icon */}
       <div>
@@ -145,7 +239,7 @@ const Navbar = () => {
           }}
           sx={{
             "& .MuiPaper-root": {
-              backgroundColor: mode ? "#000000" : "#ffffff",
+              backgroundColor: "#ffffff",
             },
           }}
         >

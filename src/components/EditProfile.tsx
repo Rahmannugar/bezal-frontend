@@ -101,7 +101,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   //response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
