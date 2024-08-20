@@ -171,7 +171,7 @@ const Navbar = () => {
                 <div
                   key={user._id}
                   className="flex items-center space-x-3 py-3 w-[400px] px-5"
-                  onClick={() => navigate(`/profile/${user._id}`)}
+                  onClick={() => navigate(`/users/${user.userName}`)}
                 >
                   <img
                     src={user.profileImage}

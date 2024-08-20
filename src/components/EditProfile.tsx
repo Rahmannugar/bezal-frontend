@@ -1,15 +1,9 @@
 import { Alert, Checkbox, FormControlLabel, Snackbar } from "@mui/material";
 import { useRef, useState } from "react";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { storage } from "../storage/Firebase";
 import { setUser } from "../states/userSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 
 interface EditProfileProps {
