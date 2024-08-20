@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { RootState } from "../states/store";
 import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material";
@@ -31,7 +31,13 @@ const Profile = () => {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const mode = useSelector((state: RootState) => state.user.mode);
+  const loggedInUser = useSelector((state: RootState) => state.user.user);
   const theme = useTheme();
+
+  //routing native user
+  if (userName === loggedInUser.userName) {
+    return <Navigate to={`/${loggedInUser.userName}`} />;
+  }
 
   useEffect(() => {
     const fetchUserProfile = async () => {
