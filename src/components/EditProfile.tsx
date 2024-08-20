@@ -152,9 +152,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         `${backendURL}/users/${user._id}`,
         userData,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          withCredentials: true,
         }
       );
 
