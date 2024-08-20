@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../states/store";
-import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material";
 import Navbar from "../components/Navbar";
 import LeftBar from "../components/LeftBar";
+import { setUser } from "../states/userSlice";
 
 interface User {
+  _id: string;
   firstName: string;
   lastName: string;
   userName: string;
@@ -24,18 +26,20 @@ interface User {
 
 const Profile = () => {
   const { userName } = useParams<{ userName: string }>();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserProfile] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [following, setFollowing] = useState(false);
 
   // Backend URL from environment
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const mode = useSelector((state: RootState) => state.user.mode);
   const loggedInUser = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch();
   const theme = useTheme();
 
-  //routing native user
-  if (userName === loggedInUser.userName) {
+  // Routing native user
+  if (userName === loggedInUser?.userName) {
     return <Navigate to={`/${loggedInUser.userName}`} />;
   }
 
@@ -43,7 +47,12 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(`${backendURL}/users/${userName}`);
-        setUser(response.data);
+        setUserProfile(response.data);
+
+        // Check if loggedInUser is already following this profile user
+        if (loggedInUser?.userFollows?.includes(response.data._id)) {
+          setFollowing(true);
+        }
       } catch (err) {
         setError("User not found or an error occurred.");
         console.error(err);
@@ -51,9 +60,34 @@ const Profile = () => {
     };
 
     fetchUserProfile();
-  }, [userName, backendURL]);
+  }, [userName, loggedInUser, backendURL]);
 
-  const handleFollow = () => {};
+  //follow, unfollow function
+  const handleFollow = async () => {
+    try {
+      const response = await axios.put(
+        `${backendURL}/users/${userName}/follow`,
+        {
+          loggedInUserName: loggedInUser?.userName,
+        }
+      );
+
+      if (response.status === 200) {
+        const { following, updatedUserFollows } = response.data;
+
+        setFollowing(following);
+
+        //Updating the loggedInUser in the Redux store
+        const updatedLoggedInUser = {
+          ...loggedInUser,
+          userFollows: updatedUserFollows,
+        };
+        dispatch(setUser(updatedLoggedInUser));
+      }
+    } catch (error) {
+      console.error("Failed to follow/unfollow the user", error);
+    }
+  };
 
   return (
     <div>
@@ -121,11 +155,9 @@ const Profile = () => {
                       <div>
                         <button
                           onClick={handleFollow}
-                          className={`mt-3 hover:text-[#4385F5] duration-100 ${
-                            mode ? "text-black" : "text-white"
-                          }`}
+                          className={`mt-3  text-white py-3 px-4 rounded-md shadow-md duration-100 bg-[#4385F5]`}
                         >
-                          Follow
+                          {following ? "Following" : "Follow"}
                         </button>
                       </div>
                     </div>

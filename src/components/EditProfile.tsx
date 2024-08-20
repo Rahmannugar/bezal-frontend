@@ -114,6 +114,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   //   update user data
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("clicked");
 
     if (!profileInputRef.current?.files || !coverInputRef.current?.files)
       return;

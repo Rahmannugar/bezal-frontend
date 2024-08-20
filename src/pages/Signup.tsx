@@ -114,7 +114,7 @@ const Signup = () => {
           isDatePublic: isDatePublic,
         },
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
         setResponseMessage("Signup successful!");
         setResponseSeverity("success");
         setOpenSnackbar(true);
