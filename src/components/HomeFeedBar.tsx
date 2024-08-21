@@ -66,11 +66,26 @@ const HomeFeedBar = () => {
             This 3 shows are special😄 Part (1/7) #TheOwlHouse #DemonSlayer
             #AvatarTheLastAirbender
           </p>
-          <div className="mt-10">
+          <div className="mt-10 grid gap-2 grid-cols-2">
             <img
               src={postImage}
               alt="postImage"
-              className="rounded-[20px] h-auto min-w-[572px] object-cover w-[100vw] max-w-[100%]"
+              className="rounded-[20px] h-auto object-cover w-[100vw]"
+            />
+            <img
+              src={postImage}
+              alt="postImage"
+              className="rounded-[20px] h-auto  object-cover w-[100vw]"
+            />
+            <img
+              src={postImage}
+              alt="postImage"
+              className="rounded-[20px] h-auto  object-cover w-[100vw]"
+            />
+            <img
+              src={postImage}
+              alt="postImage"
+              className="rounded-[20px] h-auto  object-cover w-[100vw]"
             />
           </div>
         </div>

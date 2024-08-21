@@ -1,14 +1,41 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
+import { ChangeEvent, useRef, useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const PostBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const mode = useSelector((state: RootState) => state.user.mode);
+
+  //post functionality section
+  const [postMessage, setPostMessage] = useState("");
+  const [images, setImages] = useState<File[]>([]);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+
+  //select image
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleMediaButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeImage = (imageIndex: number) => {
+    const newImages = images.filter((_, index) => index !== imageIndex);
+    setImages(newImages);
+  };
+
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const selectedFiles = Array.from(event.target.files).slice(0, 4); // Allow up to 4 images
+      setImages(selectedFiles);
+    }
+  };
+
   return (
     <div>
       {/* post bar */}
       <div
-        className={`min-w-[600px] w-[50vw] max-w-[100%] h-[178px] space-y-8 shadow-md px-7 pt-5 mt-10 rounded-[20px] mx-auto ${
+        className={`min-w-[600px] w-[50vw] max-w-[100%] py-5 space-y-8 shadow-md px-7 pt-5 mt-10 rounded-[20px] mx-auto ${
           mode ? "bg-white border-none" : "bg-transparent border"
         }`}
       >
@@ -16,7 +43,7 @@ const PostBar = () => {
           <img
             src={user.profileImage}
             alt="bezal"
-            className="w-[40px] h-[40px] mt-[-10px] rounded-full"
+            className="w-[40px] h-[40px] mt-[-10px] object-cover rounded-full"
           />
 
           {/* post textfield */}
@@ -24,8 +51,29 @@ const PostBar = () => {
             className={`min-h-[40px] w-full pt-3 resize-none border-none ${
               mode ? "bg-white text-black" : "bg-transparent text-white"
             }  outline-none  placeholder-[#C5C7C8]`}
+            value={postMessage}
             placeholder="Type Something"
           ></textarea>
+        </div>
+
+        {/* Display selected images */}
+        <div className="flex space-x-2 mt-4">
+          {images.map((image, index) => (
+            <div className="relative">
+              <img
+                key={index}
+                src={URL.createObjectURL(image)}
+                alt={`preview-${index}`}
+                className="w-[50px] h-[50px] object-cover"
+              />
+              <div
+                className="absolute top-0 right-0"
+                onClick={() => removeImage(index)}
+              >
+                <ClearIcon style={{ color: mode ? "#000000" : "#ffffff" }} />
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* bottom section */}
@@ -75,7 +123,7 @@ const PostBar = () => {
             </button>
 
             {/* media tool */}
-            <button>
+            <button onClick={handleMediaButtonClick}>
               <svg
                 width="28"
                 height="28"
@@ -140,6 +188,15 @@ const PostBar = () => {
                   </clipPath>
                 </defs>
               </svg>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
             </button>
 
             {/* visibility tool */}
