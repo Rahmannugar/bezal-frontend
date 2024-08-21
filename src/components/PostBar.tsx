@@ -12,6 +12,12 @@ const PostBar = () => {
   const [images, setImages] = useState<File[]>([]);
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 
+  const handlePostMessageChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setPostMessage(e.target.value);
+  };
+
   //select image
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,10 +54,11 @@ const PostBar = () => {
 
           {/* post textfield */}
           <textarea
-            className={`min-h-[40px] w-full pt-3 resize-none border-none ${
+            className={`min-h-[150px] w-full pt-3 resize-none border-none ${
               mode ? "bg-white text-black" : "bg-transparent text-white"
             }  outline-none  placeholder-[#C5C7C8]`}
             value={postMessage}
+            onChange={handlePostMessageChange}
             placeholder="Type Something"
           ></textarea>
         </div>
