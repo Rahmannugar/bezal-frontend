@@ -225,9 +225,9 @@ const LeftBar = () => {
         >
           <div>
             <img
-              src="https://i.ibb.co/KsMc2Qn/bezal.png"
+              src={user.profileImage}
               alt="bezal"
-              className="w-[20px] h-[20px] rounded-full"
+              className="w-[20px] h-[20px] rounded-full object-cover"
             />
           </div>
           <h1

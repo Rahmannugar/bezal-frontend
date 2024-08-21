@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../states/store";
-import { useTheme } from "@mui/material";
+import { Popover, useTheme } from "@mui/material";
 import Navbar from "../components/Navbar";
 import LeftBar from "../components/LeftBar";
 import { setUser } from "../states/userSlice";
@@ -27,6 +27,8 @@ interface User {
 const Profile = () => {
   const { userName } = useParams<{ userName: string }>();
   const [user, setUserProfile] = useState<User | null>(null);
+  const [followResults, setFollowResults] = useState<User[]>([]);
+  const [followerResults, setFollowerResults] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
 
@@ -36,6 +38,7 @@ const Profile = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const loggedInUser = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const theme = useTheme();
 
   // Routing native user
@@ -47,7 +50,9 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(`${backendURL}/users/${userName}`);
-        setUserProfile(response.data);
+        if (response.status === 200) {
+          setUserProfile(response.data);
+        }
 
         // Check if loggedInUser is already following this profile user
         if (loggedInUser?.userFollows?.includes(response.data._id)) {
@@ -59,7 +64,22 @@ const Profile = () => {
       }
     };
 
+    const getUserFollowing = async () => {
+      try {
+        const response = await axios.get(
+          `${backendURL}/users/following/${userName}`
+        );
+        if (response.status === 200) {
+          setFollowResults(response.data.follows);
+          setFollowerResults(response.data.followers);
+        }
+      } catch (error) {
+        console.error("Error searching users:", error);
+      }
+    };
+
     fetchUserProfile();
+    getUserFollowing();
   }, [userName, loggedInUser, backendURL]);
 
   //follow, unfollow function
@@ -94,6 +114,32 @@ const Profile = () => {
       }
     }
   };
+  
+  //view follows and followers
+  const [followAnchorEl, setFollowAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const [followerAnchorEl, setFollowerAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+
+  const handleFollowPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setFollowAnchorEl(event.currentTarget);
+  };
+
+  const handleFollowPopoverClose = () => {
+    setFollowAnchorEl(null);
+  };
+
+  const handleFollowerPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setFollowerAnchorEl(event.currentTarget);
+  };
+
+  const handleFollowerPopoverClose = () => {
+    setFollowerAnchorEl(null);
+  };
+  const followOpen = Boolean(followAnchorEl);
+  const followerOpen = Boolean(followerAnchorEl);
 
   return (
     <div>
@@ -224,8 +270,9 @@ const Profile = () => {
                           : `${user.userPosts.length} posts`}
                       </h1>
                     </div>
+
                     {/*follows */}
-                    <div className="flex items-center space-x-2">
+                    <button className="flex items-center space-x-2">
                       <svg
                         width="20"
                         height="16"
@@ -239,16 +286,64 @@ const Profile = () => {
                         />
                       </svg>
 
-                      <h1
+                      <div
+                        onClick={handleFollowPopoverOpen}
                         className={`mt-1 ${mode ? "text-black" : "text-white"}`}
                       >
                         {user.userFollows.length === 1
                           ? `${user.userFollows.length} follow`
                           : `${user.userFollows.length} follows`}
-                      </h1>
-                    </div>
+                      </div>
+                    </button>
+
+                    {/* follows */}
+                    <Popover
+                      open={followOpen}
+                      anchorEl={followAnchorEl}
+                      onClose={handleFollowPopoverClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                      disableAutoFocus
+                      disableEnforceFocus
+                    >
+                      <div className="h-[30vh]">
+                        {followResults.length > 0 ? (
+                          followResults.map((follow) => (
+                            <button className="hover:bg-gray-300">
+                              <div
+                                key={follow._id}
+                                className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                                onClick={() =>
+                                  navigate(`/users/${follow.userName}`)
+                                }
+                              >
+                                <img
+                                  src={follow.profileImage}
+                                  alt={`${follow.userName}'s profile`}
+                                  className="w-[30px] h-[30px] object-cover rounded-full"
+                                />
+                                <div>
+                                  <span>{follow.userName}</span>
+                                </div>
+                              </div>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="py-3 w-[400px] text-black px-5">
+                            You currently follow no one!
+                          </div>
+                        )}
+                      </div>
+                    </Popover>
+
                     {/*followers */}
-                    <div className="flex items-center space-x-2">
+                    <button className="flex items-center space-x-2">
                       <svg
                         width="20"
                         height="16"
@@ -262,14 +357,61 @@ const Profile = () => {
                         />
                       </svg>
 
-                      <h1
+                      <div
+                        onClick={handleFollowerPopoverOpen}
                         className={`mt-1 ${mode ? "text-black" : "text-white"}`}
                       >
                         {user.userFollowers.length === 1
                           ? `${user.userFollowers.length} follower`
                           : `${user.userFollowers.length} followers`}
-                      </h1>
-                    </div>
+                      </div>
+                    </button>
+
+                    {/* followers */}
+                    <Popover
+                      open={followerOpen}
+                      anchorEl={followerAnchorEl}
+                      onClose={handleFollowerPopoverClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                      disableAutoFocus
+                      disableEnforceFocus
+                    >
+                      <div className="h-[30vh]">
+                        {followerResults.length > 0 ? (
+                          followerResults.map((follower) => (
+                            <button className="hover:bg-gray-300">
+                              <div
+                                key={follower._id}
+                                className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                                onClick={() =>
+                                  navigate(`/users/${follower.userName}`)
+                                }
+                              >
+                                <img
+                                  src={follower.profileImage}
+                                  alt={`${follower.userName}'s profile`}
+                                  className="w-[40px] h-[40px] object-cover rounded-full"
+                                />
+                                <div>
+                                  <span>{follower.userName}</span>
+                                </div>
+                              </div>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="py-3 text-black w-[400px] px-5">
+                            You currently have no followers!
+                          </div>
+                        )}
+                      </div>
+                    </Popover>
                   </div>
                 </div>
               </div>
