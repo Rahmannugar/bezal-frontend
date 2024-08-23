@@ -57,7 +57,7 @@ const Navbar = () => {
     setOpenSnackbar(true);
     dispatch(resetUser());
     setTimeout(() => {
-      dispatch(resetUser());
+      // dispatch(resetUser());
       navigate("/login");
     }, 2000);
   };

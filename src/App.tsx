@@ -1,15 +1,18 @@
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Signup from "./pages/Signup";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import ResetPassword from "./pages/ResetPassword";
 import SuccessfulReset from "./components/SuccessfulReset";
 import Home from "./pages/Home";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./states/store";
 import Login from "./pages/Login";
 import UserProfile from "./pages/UserProfile";
 import Profile from "./pages/Profile";
+import { useEffect } from "react";
+import axios from "axios";
+import { resetUser } from "./states/userSlice";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -23,6 +26,40 @@ const App = () => {
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  //verify token
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axios.get(`${backendURL}/verify/${user._id}`, {
+          withCredentials: true,
+        });
+
+        if (response.status === 200) {
+          // console.log(response.data);
+        }
+      } catch (error) {
+        dispatch(resetUser());
+        //console.log("log out");
+        alert("Session has expired");
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    };
+
+    //checking every hour
+    const intervalId = setInterval(() => {
+      checkToken();
+    }, 3600000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
