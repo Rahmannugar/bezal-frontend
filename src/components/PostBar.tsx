@@ -1,18 +1,23 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { ChangeEvent, useRef, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import Picker, { EmojiClickData } from "emoji-picker-react";
-import { Popover } from "@mui/material";
+import { Alert, Popover, Snackbar } from "@mui/material";
 import axios from "axios";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../storage/Firebase";
+import { createPost } from "../states/postSlice";
 
 const PostBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const mode = useSelector((state: RootState) => state.user.mode);
+  const dispatch = useDispatch();
 
   //post functionality section
   const [showPicker, setShowPicker] = useState(false);
   const [postMessage, setPostMessage] = useState("");
+  const [visibility, setVisibility] = useState(true);
   const [images, setImages] = useState<File[]>([]);
 
   // backend URL
@@ -22,6 +27,11 @@ const PostBar = () => {
   const onEmojiClick = (emojiObject: EmojiClickData) => {
     setPostMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowPicker(false);
+  };
+
+  //chnage visibility
+  const changeVisibility = () => {
+    setVisibility(!visibility);
   };
 
   //handle tagging users
@@ -101,6 +111,7 @@ const PostBar = () => {
       setSearchResults([]);
     }
   };
+
   //select image
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -117,6 +128,66 @@ const PostBar = () => {
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files).slice(0, 4); // Allow up to 4 images
       setImages(selectedFiles);
+    }
+  };
+
+  // Firebase image upload function
+  const uploadImageAndGetUrl = async (file: File) => {
+    const storageRef = ref(storage, `posts/${file.name}`);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
+  };
+
+  //response logic
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [responseSeverity, setResponseSeverity] = useState<
+    "success" | "error"
+  >();
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const handleCreatePost = async () => {
+    try {
+      // Upload images to Firebase and get URLs
+      const uploadedImageUrls = await Promise.all(
+        images.map((image) => uploadImageAndGetUrl(image))
+      );
+
+      const postData = {
+        postMessage: postMessage,
+        picturePath: uploadedImageUrls,
+        isPublic: visibility,
+      };
+
+      const response = await axios.post(
+        `${backendURL}/posts/createpost/${user._id}`,
+        postData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      setPostMessage("");
+      setImages([]);
+
+      if (response.status == 200) {
+        setOpenSnackbar(true);
+        setResponseMessage("Post has been created successfully!");
+        setResponseSeverity("success");
+        dispatch(createPost(response.data));
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+      setOpenSnackbar(true);
+      setResponseMessage("Failed to create post!");
+      setResponseSeverity("error");
     }
   };
 
@@ -348,6 +419,7 @@ const PostBar = () => {
 
             {/* visibility tool */}
             <button
+              onClick={changeVisibility}
               className={`flex justify-center items-center space-x-2 rounded-[10px]  w-[140px] h-[40px] ${
                 mode
                   ? "bg-[#f7f6f6] text-[#585858] border-none"
@@ -380,7 +452,7 @@ const PostBar = () => {
               </svg>
               {/* drop down menu */}
               <div className="flex justify-center items-center space-x-3">
-                <h1>Everyone</h1>
+                <h1>{visibility ? "Everyone" : "Followers"}</h1>
                 <svg
                   width="14"
                   height="7"
@@ -395,11 +467,27 @@ const PostBar = () => {
           </div>
 
           {/* post button */}
-          <button className="w-[100px] h-[40px] rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100">
+          <button
+            onClick={handleCreatePost}
+            className="w-[100px] h-[40px] rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100"
+          >
             Post
           </button>
         </div>
       </div>
+
+      {/* Alert logic */}
+      {responseMessage && (
+        <Snackbar open={openSnackbar} autoHideDuration={6000}>
+          <Alert
+            onClose={handleCloseSnackbar}
+            variant="filled"
+            severity={responseSeverity}
+          >
+            {responseMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </div>
   );
 };

@@ -74,7 +74,7 @@ const App = () => {
           element={isLoggedIn ? <Navigate to="/" /> : <Login />}
         />
         {/* Logged-in user's profile */}
-        <Route path={`/${user.userName}`} element={<UserProfile />} />
+        <Route path={`/${user?.userName}`} element={<UserProfile />} />
         {/* Other user's profile by username */}
         <Route path={`/users/:userName`} element={<Profile />} />
         <Route path="/forgotPassword" element={<ResetPassword />} />

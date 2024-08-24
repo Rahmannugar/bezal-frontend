@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material";
 const Home = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const theme = useTheme();
+
   return (
     <div
       style={{

@@ -1,9 +1,26 @@
 import { useSelector } from "react-redux";
 import postImage from "../images/post-image.png";
 import { RootState } from "../states/store";
+import { useEffect } from "react";
+import axios from "axios";
 
 const HomeFeedBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
+
+  //backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`${backendURL}/posts`);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetchinh posts:", error);
+      }
+    };
+    fetchPost();
+  }, []);
   return (
     <div>
       {/* HomeFeed bar */}
