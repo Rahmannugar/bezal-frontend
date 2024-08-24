@@ -185,7 +185,7 @@ const Navbar = () => {
               </button>
             ))
           ) : (
-            <div className="py-3 w-[400px] px-5">No results found</div>
+            <div className="py-3 w-[400px] px-5">No users found</div>
           )}
         </div>
       </Popover>

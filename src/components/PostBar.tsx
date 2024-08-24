@@ -3,6 +3,8 @@ import { RootState } from "../states/store";
 import { ChangeEvent, useRef, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import Picker, { EmojiClickData } from "emoji-picker-react";
+import { Popover } from "@mui/material";
+import axios from "axios";
 
 const PostBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -13,17 +15,92 @@ const PostBar = () => {
   const [postMessage, setPostMessage] = useState("");
   const [images, setImages] = useState<File[]>([]);
 
+  // backend URL
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
   //handle emoji
   const onEmojiClick = (emojiObject: EmojiClickData) => {
     setPostMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowPicker(false);
   };
+
+  //handle tagging users
+  const onHashTagClick = () => {
+    setPostMessage((prevInput) => prevInput + " @");
+  };
+
   const handlePostMessageChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setPostMessage(e.target.value);
+    const message = e.target.value;
+    setPostMessage(message);
+
+    // Find the position of '@' and the next space or end of the string
+    const atIndex = message.lastIndexOf("@");
+
+    if (atIndex !== -1) {
+      const substringFromAt = message.substring(atIndex + 1).trim();
+      const searchQueryMatch = substringFromAt.match(/^[^\s]+/);
+
+      if (searchQueryMatch) {
+        const searchQuery = searchQueryMatch[0];
+        setSearchQuery(searchQuery);
+        setSearchAnchorEl(e.currentTarget);
+        handleFindUsers();
+      }
+    } else {
+      setSearchAnchorEl(null);
+      setSearchQuery("");
+    }
+
+    // Check if the message has whitespace after '@'
+    const hasWhitespace = /\s/.test(message.substring(atIndex + 1));
+    if (hasWhitespace) {
+      setSearchQuery("");
+      setSearchAnchorEl(null);
+    }
   };
 
+  //handle search user menu popup
+  const [searchAnchorEl, setSearchAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+
+  const handleSearchPopoverClose = () => {
+    setSearchAnchorEl(null);
+  };
+
+  const searchOpen = Boolean(searchAnchorEl);
+
+  //search for users
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  const handleFindUsers = async () => {
+    try {
+      if (searchQuery == "") {
+        return;
+      }
+      const response = await axios.get(`${backendURL}/users/search`, {
+        params: { query: searchQuery },
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error searching users:", error);
+    }
+  };
+
+  const handleUserSelect = (userName: string) => {
+    const message = postMessage;
+    const atIndex = message.lastIndexOf("@");
+
+    if (atIndex !== -1) {
+      const newMessage = message.substring(0, atIndex + 1) + userName + " ";
+      setPostMessage(newMessage);
+      setSearchAnchorEl(null);
+      setSearchResults([]);
+    }
+  };
   //select image
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -67,6 +144,48 @@ const PostBar = () => {
             onChange={handlePostMessageChange}
             placeholder="Type Something"
           ></textarea>
+
+          {/* search user popup menu */}
+          <Popover
+            open={searchOpen}
+            anchorEl={searchAnchorEl}
+            onClose={handleSearchPopoverClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            disableAutoFocus
+            disableEnforceFocus
+          >
+            <div className="h-[30vh]">
+              {searchResults.length > 0 ? (
+                searchResults.map((user) => (
+                  <button className="hover:bg-gray-300">
+                    <div
+                      key={user._id}
+                      className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                      onClick={() => handleUserSelect(user.userName)}
+                    >
+                      <img
+                        src={user.profileImage}
+                        alt={`${user.userName}'s profile`}
+                        className="w-[30px] h-[30px] object-cover rounded-full"
+                      />
+                      <div>
+                        <span>{user.userName}</span>
+                      </div>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="py-3 w-[400px] px-5">No users found</div>
+              )}
+            </div>
+          </Popover>
         </div>
 
         {/* Display selected images */}
@@ -119,7 +238,7 @@ const PostBar = () => {
             </button>
 
             {/* hashtag tool */}
-            <button>
+            <button onClick={onHashTagClick}>
               <svg
                 width="18"
                 height="20"
