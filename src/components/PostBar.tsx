@@ -159,7 +159,7 @@ const PostBar = () => {
 
       const postData = {
         postMessage: postMessage,
-        picturePath: uploadedImageUrls,
+        picturePath: uploadedImageUrls || "",
         isPublic: visibility,
       };
 

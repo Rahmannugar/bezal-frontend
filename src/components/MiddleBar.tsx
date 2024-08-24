@@ -6,7 +6,6 @@ const MiddleBar = () => {
     <div>
       <PostBar />
       <HomeFeedBar />
-      <HomeFeedBar />
     </div>
   );
 };

@@ -8,6 +8,7 @@ interface Post {
   postMessage: string;
   picturePath: string[];
   userPicturePath?: string;
+  views: string;
   isPublic: boolean;
   likes: Record<string, boolean>;
   dislikes: Record<string, boolean>;
