@@ -16,6 +16,9 @@ export interface UserState {
     userPosts: string[];
     userFollowers: string[];
     userFollows: string[];
+    likes: Record<string, boolean>;
+    dislikes: Record<string, boolean>;
+    comments: string[];
   };
   isLoggedIn: boolean;
   mode: boolean;
@@ -37,6 +40,9 @@ const initialState: UserState = {
     userPosts: [],
     userFollowers: [],
     userFollows: [],
+    likes: {},
+    dislikes: {},
+    comments: [],
   },
   isLoggedIn: false,
   mode: true,

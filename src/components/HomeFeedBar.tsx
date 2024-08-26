@@ -1,11 +1,12 @@
-import { useSelector } from "react-redux";
-import postImage from "../images/post-image.png";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { setUser } from "../states/userSlice";
 
 const HomeFeedBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
+  const user = useSelector((state: RootState) => state.user.user);
 
   //backend URL
   const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -27,12 +28,13 @@ const HomeFeedBar = () => {
   }
   const [posts, setPosts] = useState<Post[]>([]);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`${backendURL}/posts/posts`);
         setPosts(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -53,6 +55,88 @@ const HomeFeedBar = () => {
       return diffInMins + " minutes ago";
     } else {
       return "Just now";
+    }
+  };
+
+  const likePost = async (postId: string) => {
+    try {
+      const response = await axios.patch(
+        `${backendURL}/posts/${postId}/like`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId ? { ...post, likes: response.data.likes } : post
+        )
+      );
+
+      const updatedLikes = { ...user.likes };
+      const updatedDislikes = { ...user.dislikes };
+
+      if (updatedLikes[postId]) {
+        delete updatedLikes[postId];
+      } else {
+        updatedLikes[postId] = true;
+
+        if (updatedDislikes[postId]) {
+          delete updatedDislikes[postId];
+        }
+      }
+      dispatch(
+        setUser({
+          ...user,
+          likes: updatedLikes,
+          dislikes: updatedDislikes,
+        })
+      );
+    } catch (error) {
+      console.error("Error liking post", error);
+    }
+  };
+
+  const dislikePost = async (postId: string) => {
+    try {
+      const response = await axios.patch(
+        `${backendURL}/posts/${postId}/dislike`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? { ...post, dislikes: response.data.dislikes }
+            : post
+        )
+      );
+
+      const updatedLikes = { ...user.likes };
+      const updatedDislikes = { ...user.dislikes };
+
+      if (updatedDislikes[postId]) {
+        delete updatedDislikes[postId];
+      } else {
+        updatedDislikes[postId] = true;
+        if (updatedLikes[postId]) {
+          delete updatedLikes[postId];
+        }
+      }
+
+      dispatch(
+        setUser({
+          ...user,
+          likes: updatedLikes,
+          dislikes: updatedDislikes,
+        })
+      );
+    } catch (error) {
+      console.error("Error liking post", error);
     }
   };
 
@@ -121,7 +205,9 @@ const HomeFeedBar = () => {
             <div className={`${mode ? "" : "text-white"} mt-3`}>
               <p>{post.postMessage}</p>
               <div
-                className={`mt-10 grid gap-2 grid-cols-${post.picturePath.length}`}
+                className={`mt-10 grid gap-2 ${
+                  post.picturePath.length >= 2 && "grid-cols-2"
+                } ${post.picturePath.length == 4 && "grid-cols-4"}`}
               >
                 {post.picturePath.map((imageUrl, index) => (
                   <img
@@ -143,14 +229,20 @@ const HomeFeedBar = () => {
                     mode ? "text-[#5D5F63]" : "text-white"
                   } `}
                 >
-                  <button>
+                  <button onClick={() => likePost(post._id)}>
                     <svg
                       width="21"
                       height="20"
                       viewBox="0 0 21 20"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`${mode ? "fill-[#5D5F63]" : "fill-white"}`}
+                      className={`${
+                        user.likes[post._id]
+                          ? "fill-red-500"
+                          : mode
+                          ? "fill-[#5D5F63]"
+                          : "fill-white"
+                      }`}
                     >
                       <g clip-path="url(#clip0_1_175)">
                         <path
@@ -181,13 +273,22 @@ const HomeFeedBar = () => {
                     mode ? "text-[#5D5F63]" : "text-white"
                   } `}
                 >
-                  <button className="mt-1">
+                  <button
+                    className="mt-1"
+                    onClick={() => dislikePost(post._id)}
+                  >
                     <svg
                       width="21"
                       height="20"
                       viewBox="0 0 21 20"
                       fill="none"
-                      className={`${mode ? "fill-[#5D5F63]" : "fill-white"}`}
+                      className={`${
+                        user.likes[post._id]
+                          ? "fill-red-500"
+                          : mode
+                          ? "fill-[#5D5F63]"
+                          : "fill-white"
+                      }`}
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <g clip-path="url(#clip0_1_183)">

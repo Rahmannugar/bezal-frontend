@@ -120,7 +120,7 @@ const Navbar = () => {
       </a>
 
       {/* search field */}
-      <div className="flex justify-start items-center space-x-3 w-[649px] h-[40px] ps-5 py-3 border-[2px] border-gray-300 rounded-[10px] bg-white">
+      <div className="flex justify-start items-center space-x-1 w-[649px] h-[40px] px-5 ps-5 py-3 border-[2px] border-gray-300 rounded-[10px] bg-white">
         <svg
           className="w-4 h-4 text-gray-500"
           aria-hidden="true"

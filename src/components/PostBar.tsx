@@ -7,7 +7,6 @@ import { Alert, Popover, Snackbar } from "@mui/material";
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../storage/Firebase";
-import { createPost } from "../states/postSlice";
 
 const PostBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -178,7 +177,6 @@ const PostBar = () => {
         setOpenSnackbar(true);
         setResponseMessage("Post has been created successfully!");
         setResponseSeverity("success");
-        dispatch(createPost(response.data));
         setTimeout(() => {
           window.location.reload();
         }, 1500);
