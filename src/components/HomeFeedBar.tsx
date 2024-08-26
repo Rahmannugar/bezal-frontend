@@ -70,7 +70,13 @@ const HomeFeedBar = () => {
 
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
-          post._id === postId ? { ...post, likes: response.data.likes } : post
+          post._id === postId
+            ? {
+                ...post,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
+            : post
         )
       );
 
@@ -111,7 +117,11 @@ const HomeFeedBar = () => {
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post._id === postId
-            ? { ...post, dislikes: response.data.dislikes }
+            ? {
+                ...post,
+                likes: response.data.likes,
+                dislikes: response.data.dislikes,
+              }
             : post
         )
       );
@@ -283,7 +293,7 @@ const HomeFeedBar = () => {
                       viewBox="0 0 21 20"
                       fill="none"
                       className={`${
-                        user.likes[post._id]
+                        user.dislikes[post._id]
                           ? "fill-red-500"
                           : mode
                           ? "fill-[#5D5F63]"

@@ -5,6 +5,7 @@ import { storage } from "../storage/Firebase";
 import { setUser } from "../states/userSlice";
 import { useDispatch } from "react-redux";
 import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface EditProfileProps {
   user: {
@@ -95,6 +96,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //response logic
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -158,12 +160,11 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
       if (response.status === 200) {
         dispatch(setUser(response.data));
-        console.log(response.data);
         setOpenSnackbar(true);
         setResponseMessage("User profile updated successfully!");
         setResponseSeverity("success");
         setTimeout(() => {
-          window.location.reload();
+          navigate(`/${user.userName}`);
         }, 3000);
       }
     } catch (error) {
