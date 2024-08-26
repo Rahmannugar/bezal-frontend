@@ -3,6 +3,16 @@ import { RootState } from "../states/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { setUser } from "../states/userSlice";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Snackbar,
+} from "@mui/material";
 
 const HomeFeedBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -17,7 +27,7 @@ const HomeFeedBar = () => {
     postMessage: string;
     picturePath: string[];
     userPicturePath?: string;
-    views: string;
+    views: number;
     isPublic: boolean;
     likes: Record<string, boolean>;
     dislikes: Record<string, boolean>;
@@ -27,11 +37,12 @@ const HomeFeedBar = () => {
     updatedAt: string;
   }
   const [posts, setPosts] = useState<Post[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchPosts = async () => {
       try {
         const response = await axios.get(`${backendURL}/posts/posts`);
         setPosts(response.data);
@@ -39,7 +50,7 @@ const HomeFeedBar = () => {
         console.error("Error fetching posts:", error);
       }
     };
-    fetchPost();
+    fetchPosts();
   }, []);
 
   const formatTimeAgo = (timestamp: string) => {
@@ -150,6 +161,84 @@ const HomeFeedBar = () => {
     }
   };
 
+  const sharePost = (url: string) => {
+    navigator.clipboard.writeText(url).then(
+      () => {
+        setResponseMessage("Post link has been copied to your clipboard!");
+        setResponseSeverity("info");
+        setOpenSnackbar(true);
+      },
+      (err) => {
+        console.error("Failed to copy link to clipboard", err);
+        setResponseMessage("Failed to copy link. Please try again.");
+        setResponseSeverity("error");
+        setOpenSnackbar(true);
+      }
+    );
+  };
+
+  //alert options
+  const [responseMessage, setResponseMessage] = useState<string>("");
+  const [responseSeverity, setResponseSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >();
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  //tip menu
+  const handleTipClick = (postUserId: string) => {
+    if (postUserId == user._id) {
+      setResponseMessage("Post creator isn't allowed to do this!");
+      setResponseSeverity("warning");
+      setOpenSnackbar(true);
+    } else {
+      setResponseMessage("This feature is coming soon");
+      setResponseSeverity("info");
+      setOpenSnackbar(true);
+    }
+  };
+
+  //open delete dialog
+  const handleDialogOpen = (postUserId: string) => {
+    if (postUserId == user._id) {
+      setOpenDialog(true);
+    } else {
+      setResponseMessage("Only post creator is allowed to do this!");
+      setResponseSeverity("error");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+  //deletePost
+  const deletePost = async (postId: string) => {
+    try {
+      const response = await axios.delete(
+        `${backendURL}/posts/${postId}/deletepost`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status == 200) {
+        setResponseMessage("You've successfully deleted this post");
+        setResponseSeverity("success");
+        setOpenSnackbar(true);
+        setTimeout(() => {
+          setPosts((prevPosts) =>
+            prevPosts.filter((post) => post._id !== postId)
+          );
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error deleting post", error);
+    }
+  };
   return (
     <div>
       {/* HomeFeed bar */}
@@ -164,20 +253,25 @@ const HomeFeedBar = () => {
             {/* user data */}
             <div className="flex justify-between">
               {/* left top section */}
+
               <div className="flex items-center space-x-5">
-                <img
-                  src={post.userPicturePath}
-                  alt="bezal"
-                  className="w-[40px] h-[40px] rounded-full"
-                />
+                <a href={`/${post.userName}`}>
+                  <img
+                    src={post.userPicturePath}
+                    alt="bezal"
+                    className="w-[40px] h-[40px] rounded-full"
+                  />
+                </a>
                 <div>
-                  <h1
-                    className={` ${
-                      mode ? "text-black" : "text-white"
-                    } font-semibold`}
-                  >
-                    {post.userName}
-                  </h1>
+                  <a href={`/${post.userName}`}>
+                    <button
+                      className={` ${
+                        mode ? "text-black" : "text-white"
+                      } font-semibold`}
+                    >
+                      {post.userName}
+                    </button>
+                  </a>
                   <h1
                     className={` ${
                       mode ? "text-[#AAAAAA]" : "text-white"
@@ -191,9 +285,9 @@ const HomeFeedBar = () => {
               {/* right top section */}
               <div className="flex items-center space-x-5">
                 <h1 className={`${mode ? "text-[#AAAAAA]" : "text-white"}`}>
-                  {post.views} views
+                  {post.views} {post.views == 1 ? "view" : "views"}
                 </h1>
-                <button>
+                <button onClick={() => handleDialogOpen(post.userId)}>
                   <svg
                     width="15"
                     height="35"
@@ -213,7 +307,9 @@ const HomeFeedBar = () => {
             </div>
             {/* main content section */}
             <div className={`${mode ? "" : "text-white"} mt-3`}>
-              <p>{post.postMessage}</p>
+              <a href={`/posts/${post._id}`}>
+                <p>{post.postMessage}</p>
+              </a>
               <div
                 className={`mt-10 grid gap-2 ${
                   post.picturePath.length >= 2 && "grid-cols-2"
@@ -326,7 +422,11 @@ const HomeFeedBar = () => {
 
                 {/* repost menu */}
                 <div className="flex items-center mt-1">
-                  <button>
+                  <button
+                    onClick={() =>
+                      sharePost(`${window.location.origin}/posts/${post._id}`)
+                    }
+                  >
                     <svg
                       width="26"
                       height="20"
@@ -383,6 +483,7 @@ const HomeFeedBar = () => {
               {/* tip option */}
               <div>
                 <button
+                  onClick={() => handleTipClick(post.userId)}
                   className={`hover:text-[#4385F5] ${
                     mode ? "text-[#5D5F63]" : "text-white"
                   }`}
@@ -465,6 +566,40 @@ const HomeFeedBar = () => {
                 </button>
               </div>
             </div>
+
+            {/* alert menu */}
+            {responseMessage && (
+              <Snackbar open={openSnackbar} autoHideDuration={6000}>
+                <Alert
+                  onClose={handleCloseSnackbar}
+                  variant="filled"
+                  severity={responseSeverity}
+                >
+                  {responseMessage}
+                </Alert>
+              </Snackbar>
+            )}
+
+            {/* dialog menu */}
+            <Dialog
+              open={openDialog}
+              onClose={handleDialogClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">Delete post?</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete this post?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button onClick={() => deletePost(post._id)} autoFocus>
+                  Delete Post
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         ))
       ) : (
