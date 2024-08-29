@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { ChangeEvent, useRef, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -11,7 +11,6 @@ import { storage } from "../storage/Firebase";
 const PostBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const mode = useSelector((state: RootState) => state.user.mode);
-  const dispatch = useDispatch();
 
   //post functionality section
   const [showPicker, setShowPicker] = useState(false);
