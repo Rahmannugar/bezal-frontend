@@ -264,20 +264,21 @@ const HomeFeedBar = () => {
   //submit comment
   const submitComment = async (postId: string) => {
     try {
-      const response = await axios.post(
-        `${backendURL}/posts/${postId}/commentpost`,
-        commentMessage,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios({
+        method: "POST",
+        url: `${backendURL}/posts/${postId}/commentpost`,
+        data: {
+          commentMessage: commentMessage,
+        },
+        withCredentials: true,
+      });
       if (response.status == 200) {
         setResponseMessage("You've successfully commented on this post");
         setResponseSeverity("success");
         setOpenSnackbar(true);
         setTimeout(() => {
-          navigate(`/${postId}`);
-        }, 1500);
+          navigate(`/posts/${postId}`);
+        }, 2000);
       }
     } catch (error) {
       console.error("Error commenting post", error);
@@ -543,9 +544,11 @@ const HomeFeedBar = () => {
 
             {/* view comments */}
             <div className="mt-5">
-              <button className="text-[#4385F5]">
-                View {post.comments.length} comments
-              </button>
+              <a href={`/posts/${post._id}`}>
+                <button className="text-[#4385F5]">
+                  View {post.comments.length} comments
+                </button>
+              </a>
             </div>
 
             {/* bottom menu */}
