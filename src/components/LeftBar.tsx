@@ -94,7 +94,7 @@ const LeftBar = () => {
           </h1>
         </a>
 
-        {/* Group */}
+        {/* Friends */}
         <a href="/" className="flex items-center px-10 space-x-5 group">
           <div>
             <svg
@@ -118,12 +118,15 @@ const LeftBar = () => {
               mode ? "text-[#5D5F63]" : "text-white"
             } font-semibold text-[20px] group-hover:text-[#4385F5]`}
           >
-            Group
+            Friends
           </h1>
         </a>
 
         {/* Settings */}
-        <a href="/" className="flex items-center px-10 space-x-5  group">
+        <a
+          href={`/${user.userName}`}
+          className="flex items-center px-10 space-x-5  group"
+        >
           <div className="hover:text-[#4385F5]">
             <svg
               width="20"

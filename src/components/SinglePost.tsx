@@ -659,13 +659,18 @@ const SinglePost = () => {
               comments.map((comment) => (
                 <div id={comment._id} className="mt-3">
                   <div className="flex space-x-2 px-7 items-center">
-                    <img
-                      src={comment.userPicturePath}
-                      className="w-[40px] h-[40px] object-cover rounded-full"
-                      alt="userImage"
-                    />
+                    <a href={`/${comment.userName}`}>
+                      <img
+                        src={comment.userPicturePath}
+                        className="w-[40px] h-[40px] object-cover rounded-full"
+                        alt="userImage"
+                      />
+                    </a>
+
                     <div>
-                      <h1>{comment.userName}</h1>
+                      <a href={`/${comment.userName}`}>
+                        <button>{comment.userName}</button>
+                      </a>
                       <h1 className={`text-sm`}>
                         {formatTimeAgo(comment.createdAt)}
                       </h1>
