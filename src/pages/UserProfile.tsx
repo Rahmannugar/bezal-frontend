@@ -88,6 +88,7 @@ const UserProfile = () => {
           `${backendURL}/posts/userposts/${user.userName}`
         );
         setPosts(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -140,8 +141,20 @@ const UserProfile = () => {
     const diffInMs = now.getTime() - postDate.getTime();
     const diffInMins = Math.floor(diffInMs / (1000 * 60));
     const diffInHrs = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-    if (diffInHrs > 0) {
+    if (diffInDays > 7) {
+      // Return the exact date if more than 7 days have passed
+      return postDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } else if (diffInHrs >= 72) {
+      // After 72 hours, show days ago
+      return diffInDays + " days ago";
+    } else if (diffInHrs > 0) {
+      // Before 72 hours, show hours ago
       return diffInHrs + " hours ago";
     } else if (diffInMins > 0) {
       return diffInMins + " minutes ago";
@@ -605,7 +618,9 @@ const UserProfile = () => {
         </div>
       </div>
       <h1
-        className={`text-center text-lg italic underline mt-[-100px] ${mode ? "text-black" : "text-white"}`}
+        className={`text-center text-lg italic underline mt-[-100px] ${
+          mode ? "text-black" : "text-white"
+        }`}
       >
         POSTS
       </h1>
@@ -866,9 +881,11 @@ const UserProfile = () => {
 
               {/* view comments */}
               <div className="mt-5">
-                <button className="text-[#4385F5]">
-                  View {post.comments.length} comments
-                </button>
+                <a href={`/posts/${post._id}`}>
+                  <button className="text-[#4385F5]">
+                    View {post.comments.length} comments
+                  </button>
+                </a>
               </div>
 
               {/* bottom menu */}

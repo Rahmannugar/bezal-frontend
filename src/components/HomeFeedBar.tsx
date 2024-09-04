@@ -304,7 +304,7 @@ const HomeFeedBar = () => {
               {/* left top section */}
 
               <div className="flex items-center space-x-5">
-                <a href={`/${post.userName}`}>
+                <a href={`/users/${post.userName}`}>
                   <img
                     src={post.userPicturePath}
                     alt="bezal"
@@ -312,7 +312,7 @@ const HomeFeedBar = () => {
                   />
                 </a>
                 <div>
-                  <a href={`/${post.userName}`}>
+                  <a href={`/users/${post.userName}`}>
                     <button
                       className={` ${
                         mode ? "text-black" : "text-white"
