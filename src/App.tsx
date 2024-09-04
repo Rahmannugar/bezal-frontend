@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { resetUser } from "./states/userSlice";
 import Post from "./pages/Post";
+import Friends from "./pages/Friends";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -80,6 +81,7 @@ const App = () => {
         <Route path={`/users/:userName`} element={<Profile />} />
         {/* single post */}
         <Route path={`/posts/:postId`} element={<Post />} />
+        <Route path={`/${user?.userName}/friends`} element={<Friends />} />
         <Route path="/forgotPassword" element={<ResetPassword />} />
       </Routes>
     </ThemeProvider>

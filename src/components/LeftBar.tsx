@@ -95,7 +95,10 @@ const LeftBar = () => {
         </a>
 
         {/* Friends */}
-        <a href="/" className="flex items-center px-10 space-x-5 group">
+        <a
+          href={`${user.userName}/friends`}
+          className="flex items-center px-10 space-x-5 group"
+        >
           <div>
             <svg
               width="20"
