@@ -65,8 +65,20 @@ const HomeFeedBar = () => {
     const diffInMs = now.getTime() - postDate.getTime();
     const diffInMins = Math.floor(diffInMs / (1000 * 60));
     const diffInHrs = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-    if (diffInHrs > 0) {
+    if (diffInDays > 7) {
+      // Return the exact date if more than 7 days have passed
+      return postDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } else if (diffInHrs >= 72) {
+      // After 72 hours, show days ago
+      return diffInDays + " days ago";
+    } else if (diffInHrs > 0) {
+      // Before 72 hours, show hours ago
       return diffInHrs + " hours ago";
     } else if (diffInMins > 0) {
       return diffInMins + " minutes ago";

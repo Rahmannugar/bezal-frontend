@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
 
 const NewPassword = () => {
+  const { token } = useParams<{ token: string }>();
+
   //form inputs
-  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   // Handling form inputs change
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+    setPassword(e.target.value);
   };
 
   // response logic
@@ -24,6 +26,9 @@ const NewPassword = () => {
     setOpenSnackbar(false);
   };
 
+  // navigation
+  const navigate = useNavigate();
+
   // backend URL
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -34,21 +39,25 @@ const NewPassword = () => {
       // posting FormData to backend for login
       const response = await axios({
         method: "POST",
-        url: `${backendURL}/forgotPassword`,
+        url: `${backendURL}/resetpassword/${token}`,
         headers: {
           "Content-Type": "application/json",
         },
         data: {
-          email,
+          password,
         },
         withCredentials: true,
       });
 
       if (response.status === 200) {
-        setEmail("");
+        setPassword("");
         setOpenSnackbar(true);
-        setResponseMessage("You have been sent a password reset mail!");
+        setResponseMessage("Password has been changed succcessfully!");
         setResponseSeverity("success");
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (error) {
       // Error handling
@@ -91,14 +100,14 @@ const NewPassword = () => {
           </h1>
 
           <div className="space-y-2 mb-5">
-            <label htmlFor="email" className="font-semibold leading-6">
-              Email Address*
+            <label htmlFor="password" className="font-semibold leading-6">
+              New password*
             </label>
             <input
               type="text"
-              placeholder="Your email address"
-              name="email"
-              value={email}
+              placeholder="Your new password"
+              name="password"
+              value={password}
               onChange={handleEmailChange}
               className=" appearance-none border-[2px] rounded-[10px] w-full py-[12px] px-[24px] placeholder:text-[#D2D2D1] leading-tight focus:outline-none focus:text-black focus:shadow-outline"
             />
