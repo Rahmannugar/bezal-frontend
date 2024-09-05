@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
 
-const ResetPassword = () => {
+const NewPassword = () => {
   //form inputs
   const [email, setEmail] = useState<string>("");
 
@@ -130,4 +130,4 @@ const ResetPassword = () => {
     </>
   );
 };
-export default ResetPassword;
+export default NewPassword;
