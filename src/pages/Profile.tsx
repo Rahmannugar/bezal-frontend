@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../states/store";
+import ChatIcon from "@mui/icons-material/Chat";
 import {
   Alert,
   Button,
@@ -415,7 +416,7 @@ const Profile = () => {
                   {/* profile image  */}
                   <div className="flex space-x-4">
                     <img
-                      className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full w-[250px]  h-[250px] border-[8px] ${
+                      className={` ml-[20px] transform object-cover -translate-y-1/2 rounded-full w-[250px] h-[250px] border-[8px] ${
                         mode ? "border-[#FAFAFA]" : "border-black"
                       }`}
                       src={user.profileImage}
@@ -449,7 +450,17 @@ const Profile = () => {
                         </h1>
                       </div>
 
-                      <div>
+                      <div className="space-x-4">
+                        <button>
+                          <a href="">
+                            <ChatIcon
+                              sx={{
+                                color: mode ? "black" : "white",
+                                fontSize: 36,
+                              }}
+                            />
+                          </a>
+                        </button>
                         <button
                           onClick={handleFollow}
                           className={`mt-3  text-white py-3 px-4 rounded-md shadow-md duration-100 bg-[#4385F5]`}

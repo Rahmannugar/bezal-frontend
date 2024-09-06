@@ -56,7 +56,7 @@ const LeftBar = () => {
         </a>
 
         {/* Chat */}
-        <a href="/" className="flex items-center px-10 space-x-5 group">
+        <a href="/chat" className="flex items-center px-10 space-x-5 group">
           <div>
             <svg
               width="20"
