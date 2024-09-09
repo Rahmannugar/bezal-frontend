@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
@@ -26,6 +26,7 @@ const ResetPassword = () => {
 
   // backend URL
   const backendURL = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
 
   //submit action
   const handleReset = async (e: React.FormEvent) => {
@@ -49,6 +50,9 @@ const ResetPassword = () => {
         setOpenSnackbar(true);
         setResponseMessage("You have been sent a password reset mail!");
         setResponseSeverity("success");
+        setTimeout(() => {
+          navigate("/verifypassword");
+        }, 1500);
       }
     } catch (error) {
       // Error handling
