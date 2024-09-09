@@ -1,5 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface Notification {
+  _id: string;
+  msg: string;
+  read: boolean;
+  image: string;
+  postUrl?: string;
+  name: string;
+  createdAt: Date;
+}
+
 export interface UserState {
   user: {
     _id: string;
@@ -19,8 +29,8 @@ export interface UserState {
     likes: Record<string, boolean>;
     dislikes: Record<string, boolean>;
     comments: string[];
-    notifications: string[];
-    readNotification: boolean;
+    notifications: Notification[];
+    readNotifications: boolean;
   };
   isLoggedIn: boolean;
   mode: boolean;
@@ -46,7 +56,7 @@ const initialState: UserState = {
     dislikes: {},
     comments: [],
     notifications: [],
-    readNotification: false,
+    readNotifications: true,
   },
   isLoggedIn: false,
   mode: true,
@@ -68,8 +78,36 @@ const userSlice = createSlice({
     setMode(state) {
       state.mode = !state.mode;
     },
+    addNotification(state, action: PayloadAction<Notification>) {
+      state.user.notifications.push(action.payload);
+    },
+
+    // Mark notifications as read
+    markNotificationRead(state, action: PayloadAction<string>) {
+      state.user.notifications = state.user.notifications.map((notification) =>
+        notification._id === action.payload
+          ? { ...notification, read: true }
+          : notification
+      );
+    },
+    markNotificationsRead(state) {
+      state.user.readNotifications = true;
+      state.user.notifications = state.user.notifications.map(
+        (notification) => ({
+          ...notification,
+          read: true,
+        })
+      );
+    },
   },
 });
 
-export const { setUser, resetUser, setMode } = userSlice.actions;
+export const {
+  setUser,
+  resetUser,
+  setMode,
+  addNotification,
+  markNotificationRead,
+  markNotificationsRead,
+} = userSlice.actions;
 export default userSlice.reducer;

@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import LeftBar from "../components/LeftBar";
-import MiddleBar from "../components/MiddleBar";
 import Navbar from "../components/Navbar";
 import RightBar from "../components/RightBar";
 import { RootState } from "../states/store";

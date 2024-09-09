@@ -669,7 +669,7 @@ const SinglePost = () => {
           >
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div id={comment._id} className="mt-3">
+                <div id={comment._id} className="py-5 border-t border-b">
                   <div className="flex space-x-2 px-7 items-center">
                     <a href={`/${comment.userName}`}>
                       <img
@@ -689,8 +689,6 @@ const SinglePost = () => {
                     </div>
                   </div>
                   <p className="mt-1 px-7">{comment.commentMessage}</p>
-                  {/* bottom menu */}
-                  <div className="bg-[#E5E5E5] w-full h-[1px] mt-4"></div>
                 </div>
               ))
             ) : (

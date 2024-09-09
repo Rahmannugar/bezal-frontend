@@ -211,7 +211,7 @@ const Navbar = () => {
               fill=""
             />
           </svg>
-          {user.readNotification ? (
+          {user.readNotifications ? (
             ""
           ) : (
             <div className="bg-[#4385F5] rounded-full w-2 h-2"></div>
