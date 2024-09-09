@@ -5,7 +5,7 @@ export interface Notification {
   msg: string;
   read: boolean;
   image: string;
-  postUrl?: string;
+  postUrl: string;
   name: string;
   createdAt: Date;
 }
@@ -80,6 +80,7 @@ const userSlice = createSlice({
     },
     addNotification(state, action: PayloadAction<Notification>) {
       state.user.notifications.push(action.payload);
+      state.user.readNotifications = false;
     },
 
     // Mark notifications as read

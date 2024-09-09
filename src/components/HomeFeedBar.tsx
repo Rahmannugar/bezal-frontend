@@ -81,7 +81,7 @@ const HomeFeedBar = () => {
       // Before 72 hours, show hours ago
       return diffInHrs + " hours ago";
     } else if (diffInMins > 0) {
-      return diffInMins + " minutes ago";
+      return diffInMins === 1 ? "1 minute ago" : `${diffInMins} minutes ago`;
     } else {
       return "Just now";
     }
