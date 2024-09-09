@@ -35,6 +35,8 @@ const NotificationBar = () => {
   const notifications = useSelector(
     (state: RootState) => state.user.user.notifications
   );
+  console.log(notifications);
+
   const [realTimeNotifications, setRealTimeNotifications] = useState<
     Notification[]
   >([]);
@@ -148,7 +150,7 @@ const NotificationBar = () => {
             <div
               className={`flex justify-between border-t border-b p-3 items-center ${
                 mode ? "text-white" : ""
-              }  ${user.readNotifications ? "" : "bg-gray-600"}`}
+              }  ${notif.read ? "" : "bg-gray-600"}`}
             >
               <div
                 key={notif._id}
