@@ -452,7 +452,7 @@ const Profile = () => {
 
                       <div className="space-x-4">
                         <button>
-                          <a href="">
+                          <a href={`/chat/${user.userName}`}>
                             <ChatIcon
                               sx={{
                                 color: mode ? "black" : "white",

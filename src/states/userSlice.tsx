@@ -19,6 +19,8 @@ export interface UserState {
     likes: Record<string, boolean>;
     dislikes: Record<string, boolean>;
     comments: string[];
+    notifications: string[];
+    readNotification: boolean;
   };
   isLoggedIn: boolean;
   mode: boolean;
@@ -43,6 +45,8 @@ const initialState: UserState = {
     likes: {},
     dislikes: {},
     comments: [],
+    notifications: [],
+    readNotification: false,
   },
   isLoggedIn: false,
   mode: true,
