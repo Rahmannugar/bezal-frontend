@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import Picker, { EmojiClickData } from "emoji-picker-react";
 import { Alert, Popover, Snackbar } from "@mui/material";
@@ -188,6 +188,25 @@ const PostBar = () => {
     }
   };
 
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node)
+      ) {
+        setShowPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="">
       {/* post bar */}
@@ -328,7 +347,10 @@ const PostBar = () => {
               </svg>
             </button>
 
-            <div className={`${!showPicker ? "hidden" : ""} absolute`}>
+            <div
+              ref={pickerRef}
+              className={`${!showPicker ? "hidden" : ""} absolute`}
+            >
               {showPicker && (
                 <Picker
                   onEmojiClick={onEmojiClick}
@@ -462,15 +484,14 @@ const PostBar = () => {
               </div>
             </button>
           </div>
+          {/* post button */}
+          <button
+            onClick={handleCreatePost}
+            className="w-[100px] h-[40px] ml-4 rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100"
+          >
+            Post
+          </button>
         </div>
-
-        {/* post button */}
-        <button
-          onClick={handleCreatePost}
-          className="w-[100px] h-[40px] rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100"
-        >
-          Post
-        </button>
       </div>
 
       {/* Alert logic */}
