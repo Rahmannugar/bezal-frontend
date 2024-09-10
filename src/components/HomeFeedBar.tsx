@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Picker, { EmojiClickData } from "emoji-picker-react";
 import SendIcon from "@mui/icons-material/Send";
 import { setUser } from "../states/userSlice";
 import {
@@ -42,7 +41,6 @@ const HomeFeedBar = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [commentMessage, setCommentMessage] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -259,11 +257,7 @@ const HomeFeedBar = () => {
     }
   };
 
-  //handle emoji
-  const onEmojiClick = (emojiObject: EmojiClickData) => {
-    setCommentMessage((prevInput) => prevInput + emojiObject.emoji);
-    setShowPicker(false);
-  };
+  //
 
   //comment post
   const handleCommentMessageChange = (
@@ -316,7 +310,7 @@ const HomeFeedBar = () => {
               key={post._id}
               className={`${
                 mode ? "bg-white" : "bg-transparent border"
-              } p-7 min-w-[600px] w-[50vw] max-w-[100%]  rounded-[20px] mt-10 shadow-md`}
+              } p-7 md:min-w-[450px] lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden rounded-[20px] mt-10 shadow-md`}
             >
               {/* user data */}
               <div className="flex justify-between">
@@ -352,7 +346,11 @@ const HomeFeedBar = () => {
 
                 {/* right top section */}
                 <div className="flex items-center space-x-5">
-                  <h1 className={`${mode ? "text-[#AAAAAA]" : "text-white"}`}>
+                  <h1
+                    className={`${
+                      mode ? "text-[#AAAAAA]" : "text-white"
+                    } text-xs md:text-base`}
+                  >
                     {post.views} {post.views == 1 ? "view" : "views"}
                   </h1>
                   <button onClick={() => handleDialogOpen(post.userId)}>
@@ -596,38 +594,6 @@ const HomeFeedBar = () => {
 
                 {/* gallery section */}
                 <div className="flex items-center pl-1 space-x-2">
-                  {/* emoji button */}
-                  <button>
-                    <em
-                      data-emoji=":grin:"
-                      className="small link"
-                      onClick={() => setShowPicker((val) => !val)}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={` ${mode ? "fill-[#AAAAAA]" : "fill-white"}`}
-                      >
-                        <path
-                          d="M1.42859 10C1.42859 5.26645 5.26645 1.42859 10 1.42859C14.7336 1.42859 18.5714 5.26645 18.5714 10C18.5714 14.7336 14.7336 18.5714 10 18.5714C5.26645 18.5714 1.42859 14.7336 1.42859 10ZM12.5 9.28573C12.7842 9.28573 13.0567 9.17285 13.2576 8.97192C13.4586 8.77099 13.5714 8.49846 13.5714 8.2143C13.5714 7.93014 13.4586 7.65762 13.2576 7.45669C13.0567 7.25576 12.7842 7.14288 12.5 7.14288C12.2159 7.14288 11.9433 7.25576 11.7424 7.45669C11.5415 7.65762 11.4286 7.93014 11.4286 8.2143C11.4286 8.49846 11.5415 8.77099 11.7424 8.97192C11.9433 9.17285 12.2159 9.28573 12.5 9.28573ZM8.57145 8.2143C8.57145 7.93014 8.45856 7.65762 8.25763 7.45669C8.0567 7.25576 7.78418 7.14288 7.50002 7.14288C7.21586 7.14288 6.94334 7.25576 6.7424 7.45669C6.54147 7.65762 6.42859 7.93014 6.42859 8.2143C6.42859 8.49846 6.54147 8.77099 6.7424 8.97192C6.94334 9.17285 7.21586 9.28573 7.50002 9.28573C7.78418 9.28573 8.0567 9.17285 8.25763 8.97192C8.45856 8.77099 8.57145 8.49846 8.57145 8.2143ZM5.94859 12.2357C5.83114 12.3157 5.75025 12.439 5.72373 12.5786C5.69721 12.7182 5.72722 12.8626 5.80716 12.98V12.9807L5.80859 12.9822L5.81002 12.9843L5.81573 12.9914C5.83799 13.0232 5.8611 13.0545 5.88502 13.085C5.93145 13.1443 5.99788 13.225 6.08502 13.32C6.31978 13.5745 6.57994 13.8042 6.86145 14.0057C7.5543 14.505 8.59859 15 10 15C11.4014 15 12.4464 14.5043 13.1386 14.0064C13.4203 13.8044 13.6807 13.5742 13.9157 13.3193C14.0054 13.2217 14.09 13.1197 14.1693 13.0136L14.185 12.9922L14.19 12.985L14.1914 12.9822L14.1922 12.9807L14.1929 12.98C14.273 12.8627 14.3032 12.7183 14.2769 12.5786C14.2506 12.439 14.1699 12.3155 14.0525 12.2354C13.9352 12.1552 13.7908 12.125 13.6511 12.1513C13.5115 12.1777 13.388 12.2584 13.3079 12.3757L13.3029 12.3829C13.2475 12.4563 13.1886 12.5271 13.1264 12.595C12.9408 12.7958 12.7352 12.9772 12.5129 13.1364C11.9643 13.5314 11.1343 13.9286 10 13.9286C8.86645 13.9286 8.03573 13.5314 7.48716 13.1364C7.26507 12.9775 7.05973 12.7963 6.8743 12.5957C6.81216 12.5279 6.75329 12.4571 6.69788 12.3836L6.69145 12.375C6.61119 12.2583 6.48798 12.1781 6.34877 12.152C6.20956 12.1259 6.06567 12.156 5.94859 12.2357Z"
-                          fill=""
-                        />
-                      </svg>
-                    </em>
-                  </button>
-
-                  <div className={`${!showPicker ? "hidden" : ""}`}>
-                    {showPicker && (
-                      <Picker
-                        onEmojiClick={onEmojiClick}
-                        reactionsDefaultOpen={true}
-                      />
-                    )}
-                  </div>
-
                   {/* submit comment button */}
                   <button
                     onClick={() => submitComment(post._id)}

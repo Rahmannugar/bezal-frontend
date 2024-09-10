@@ -132,11 +132,11 @@ const Signup = () => {
     }
   };
   return (
-    <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 items-center">
+    <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 justify-center md:justify-start items-center">
       <div className="">
         <img
           src="https://i.ibb.co/Lz0D2nq/signup.png"
-          className="h-[1000px] lg:w-[50vw]"
+          className="h-[1000px] md:w-[50vw] hidden md:block"
           alt="signup"
         />
       </div>
@@ -144,7 +144,7 @@ const Signup = () => {
       {/* sign up form */}
       <form
         onSubmit={handleSignup}
-        className="flex flex-col  bg-white shadow-xl rounded-[20px] px-8 pt-6 pb-8"
+        className="flex flex-col  bg-white shadow-xl rounded-[20px] mx-5 px-8 pt-6 pb-8"
       >
         <h1 className="font-bold leading-32px text-[24px] mb-7">sign UP</h1>
         <div className="space-y-2 mb-5">
@@ -269,16 +269,16 @@ const Signup = () => {
           />
         </div>
 
-        <div>
+        <div className="flex items-center">
           <button
             type="submit"
-            className="text-white mt-10 bg-[#4385F5] py-[12px] rounded-[10px] px-[70px]"
+            className="text-white mt-10 bg-[#4385F5] py-[12px] rounded-[10px] px-5 lg:px-[70px]"
           >
             Sign up
           </button>
           <Link
             to={"/login"}
-            className="text-[#4385F5] mt-10 bg-white py-[12px] rounded-[10px] px-[48px]"
+            className="text-[#4385F5] mt-10 bg-white py-[12px] rounded-[10px] px-5 lg:px-[70px]"
           >
             Login
           </Link>

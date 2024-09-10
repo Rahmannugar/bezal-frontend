@@ -189,14 +189,14 @@ const PostBar = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {/* post bar */}
       <div
-        className={`min-w-[600px] w-[50vw] max-w-[100%] py-5 space-y-8 shadow-md px-7 pt-5 mt-10 rounded-[20px] mx-auto ${
+        className={`md:min-w-[450px] overflow-hidden lg:min-w-[600px] min-w-[270px] w-[90vw] md:w-[50vw] max-w-[100%] py-5 space-y-4 md:space-y-8 shadow-md px-2 md:px-7 pt-5 mt-10 rounded-[20px] mx-auto ${
           mode ? "bg-white border-none" : "bg-transparent border"
         }`}
       >
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-2 md:space-x-5">
           <img
             src={user.profileImage}
             alt="bezal"
@@ -277,9 +277,9 @@ const PostBar = () => {
         </div>
 
         {/* bottom section */}
-        <div className="flex justify-between">
+        <div className="flex justify-start">
           {/* post utilities bar */}
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-2 md:space-x-5">
             {/* emoji tool */}
             <button>
               <em
@@ -288,8 +288,8 @@ const PostBar = () => {
                 onClick={() => setShowPicker((val) => !val)}
               >
                 <svg
-                  width="20"
-                  height="20"
+                  width="18"
+                  height="18"
                   viewBox="0 0 20 20"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -309,7 +309,7 @@ const PostBar = () => {
             <button onClick={onHashTagClick}>
               <svg
                 width="18"
-                height="20"
+                height="18"
                 viewBox="0 0 18 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -328,7 +328,7 @@ const PostBar = () => {
               </svg>
             </button>
 
-            <div className={`${!showPicker ? "hidden" : ""}`}>
+            <div className={`${!showPicker ? "hidden" : ""} absolute`}>
               {showPicker && (
                 <Picker
                   onEmojiClick={onEmojiClick}
@@ -340,8 +340,8 @@ const PostBar = () => {
             {/* media tool */}
             <button onClick={handleMediaButtonClick}>
               <svg
-                width="28"
-                height="28"
+                width="18"
+                height="18"
                 viewBox="0 0 28 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -417,7 +417,7 @@ const PostBar = () => {
             {/* visibility tool */}
             <button
               onClick={changeVisibility}
-              className={`flex justify-center items-center space-x-2 rounded-[10px]  w-[140px] h-[40px] ${
+              className={`flex justify-center items-center space-x-2 rounded-[10px] w-[140px] h-[40px] ${
                 mode
                   ? "bg-[#f7f6f6] text-[#585858] border-none"
                   : "bg-transparent text-white border border-white"
@@ -425,7 +425,7 @@ const PostBar = () => {
             >
               <svg
                 width="15"
-                height="16"
+                height="18"
                 viewBox="0 0 15 16"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -462,15 +462,15 @@ const PostBar = () => {
               </div>
             </button>
           </div>
-
-          {/* post button */}
-          <button
-            onClick={handleCreatePost}
-            className="w-[100px] h-[40px] rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100"
-          >
-            Post
-          </button>
         </div>
+
+        {/* post button */}
+        <button
+          onClick={handleCreatePost}
+          className="w-[100px] h-[40px] rounded-[10px] text-white bg-[#4385F5] hover:bg-[#AAAAAA] duration-100"
+        >
+          Post
+        </button>
       </div>
 
       {/* Alert logic */}

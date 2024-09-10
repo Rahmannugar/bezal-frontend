@@ -1,12 +1,9 @@
 import { useSelector } from "react-redux";
-import LeftBar from "../components/LeftBar";
 import MiddleBar from "../components/MiddleBar";
-import Navbar from "../components/Navbar";
-import RightBar from "../components/RightBar";
 import { RootState } from "../states/store";
 import { useTheme } from "@mui/material";
 
-const Home = () => {
+const MobileHome = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const theme = useTheme();
 
@@ -19,13 +16,10 @@ const Home = () => {
         minHeight: "100vh",
       }}
     >
-      <Navbar />
-      <div className="flex justify-center items-center md:justify-start md:items-start">
-        <LeftBar />
+      <div className="flex">
         <MiddleBar />
-        <RightBar />
       </div>
     </div>
   );
 };
-export default Home;
+export default MobileHome;

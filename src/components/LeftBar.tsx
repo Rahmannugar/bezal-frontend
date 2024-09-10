@@ -11,7 +11,7 @@ const LeftBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
 
   return (
-    <div className="px-5 pt-10">
+    <div className="px-5 hidden md:block pt-10">
       {/* top left side bar */}
       <div
         className={`min-w-[238px] ${
