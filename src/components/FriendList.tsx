@@ -52,7 +52,7 @@ const FriendList = () => {
     <div
       className={`${
         mode ? "bg-white text-[#5D5F63]" : "bg-transparent border text-white"
-      } p-7 min-w-[600px] flex justify-between w-[50vw] max-w-[100%]  rounded-[20px] mt-10 shadow-md`}
+      } p-7 mx-10 flex justify-between md:min-w-[450px] lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden rounded-[20px] mt-10 shadow-md`}
     >
       <div className="border-r w-1/2">
         <h1>Followers</h1>

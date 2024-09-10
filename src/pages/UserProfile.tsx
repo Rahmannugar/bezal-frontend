@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../states/userSlice";
-import Picker, { EmojiClickData } from "emoji-picker-react";
+
 import SendIcon from "@mui/icons-material/Send";
 
 const UserProfile = () => {
@@ -68,7 +68,6 @@ const UserProfile = () => {
 
   const [followResults, setFollowResults] = useState<User[]>([]);
   const [followerResults, setFollowerResults] = useState<User[]>([]);
-  const [showPicker, setShowPicker] = useState(false);
   const [commentMessage, setCommentMessage] = useState("");
 
   useEffect(() => {
@@ -338,12 +337,6 @@ const UserProfile = () => {
     }
   };
 
-  //handle emoji
-  const onEmojiClick = (emojiObject: EmojiClickData) => {
-    setCommentMessage((prevInput) => prevInput + emojiObject.emoji);
-    setShowPicker(false);
-  };
-
   //comment post
   const handleCommentMessageChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -392,7 +385,7 @@ const UserProfile = () => {
       <Navbar />
       <div className="flex md:space-x-5">
         <LeftBar />
-        <div className="w-full px-5 lg:px-10">
+        <div className="w-full px-5 mt-5 lg:px-10">
           {/* cover image */}
           <div className="relative">
             <img
@@ -467,7 +460,7 @@ const UserProfile = () => {
 
             {/* user names */}
             <div>
-              <div className="md:hidden flex space-x-3 mt-[-70px] items-center">
+              <div className="lg:hidden flex space-x-3 mt-[-70px] items-center">
                 <h1
                   className={`font-semibold text-[20px] ${
                     mode ? "text-black" : "text-white"
@@ -480,7 +473,11 @@ const UserProfile = () => {
                 </h1>
               </div>
               {/* user bio */}
-              <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
+              <h1
+                className={`mt-1 ${
+                  mode ? "text-black" : "text-white"
+                } lg:hidden`}
+              >
                 {user.bio}
               </h1>
             </div>
@@ -488,7 +485,7 @@ const UserProfile = () => {
             <div className="">
               <button
                 onClick={handleEditProfileClick}
-                className={`mt-3 py-3 px-4 bg-[#4385F5] rounded-lg duration-100 ${
+                className={`mt-3 py-3 px-4 bg-[#4385F5] lg:hidden rounded-lg duration-100 ${
                   mode ? "text-black" : "text-white"
                 }`}
               >
@@ -508,9 +505,10 @@ const UserProfile = () => {
               ""
             )}
 
+            {/* mobile menu */}
             {/* other info */}
-            <div className="md:flex md:items-center md:space-x-5 lg:space-x-16 md:justify-center">
-              <div className="flex justify-between items-center md:block">
+            <div className="lg:hidden">
+              <div className="flex justify-between items-center">
                 {/* location */}
                 <div className="flex items-center space-x-2">
                   <svg
@@ -553,7 +551,7 @@ const UserProfile = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center md:block">
+              <div className="flex justify-between items-center">
                 {/*follows */}
                 <button className="flex items-center space-x-2">
                   <svg
@@ -696,6 +694,191 @@ const UserProfile = () => {
                   </div>
                 </Popover>
               </div>
+            </div>
+
+            {/* desktop menu */}
+            {/* other info */}
+            <div className="hidden lg:flex lg:items-center lg:space-x-16 lg:justify-center">
+              {/* location */}
+              <div className="flex items-center space-x-2">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 1.25C8.1773 1.25215 6.42987 1.97717 5.14102 3.26602C3.85218 4.55486 3.12716 6.3023 3.12501 8.125C3.12282 9.61452 3.60937 11.0636 4.51001 12.25C4.51001 12.25 4.69751 12.4969 4.72813 12.5325L10 18.75L15.2744 12.5294C15.3019 12.4963 15.49 12.25 15.49 12.25L15.4906 12.2481C16.3908 11.0623 16.8771 9.61383 16.875 8.125C16.8729 6.3023 16.1478 4.55486 14.859 3.26602C13.5701 1.97717 11.8227 1.25215 10 1.25ZM10 10.625C9.50555 10.625 9.0222 10.4784 8.61108 10.2037C8.19996 9.92897 7.87953 9.53852 7.69031 9.08171C7.50109 8.62489 7.45158 8.12223 7.54804 7.63727C7.64451 7.15232 7.88261 6.70686 8.23224 6.35723C8.58187 6.0076 9.02733 5.7695 9.51228 5.67304C9.99723 5.57657 10.4999 5.62608 10.9567 5.8153C11.4135 6.00452 11.804 6.32495 12.0787 6.73607C12.3534 7.1472 12.5 7.63055 12.5 8.125C12.4992 8.78779 12.2355 9.42319 11.7669 9.89185C11.2982 10.3605 10.6628 10.6242 10 10.625Z"
+                    fill={mode ? "#AAAAAA" : "#fff"}
+                  />
+                </svg>
+                <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
+                  {user.location}
+                </h1>
+              </div>
+
+              {/* posts */}
+              <div className="flex items-center space-x-2">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.8333 4.16667V15.8333H4.16667V4.16667H15.8333ZM17.5 2.5H2.5V17.5H17.5V2.5ZM14.1667 14.1667H5.83333V13.3333H14.1667V14.1667ZM14.1667 12.5H5.83333V11.6667H14.1667V12.5ZM14.1667 10H5.83333V5.83333H14.1667V10Z"
+                    fill={mode ? "#AAAAAA" : "#fff"}
+                  />
+                </svg>
+
+                <h1 className={`mt-1 ${mode ? "text-black" : "text-white"}`}>
+                  {user.userPosts.length === 1
+                    ? `${user.userPosts.length} post`
+                    : `${user.userPosts.length} posts`}
+                </h1>
+              </div>
+
+              {/*follows */}
+              <button className="flex items-center space-x-2">
+                <svg
+                  width="20"
+                  height="16"
+                  viewBox="0 0 20 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 8C7.93437 8 9.5 6.43437 9.5 4.5C9.5 2.56562 7.93437 1 6 1C4.06563 1 2.5 2.56562 2.5 4.5C2.5 6.43437 4.06563 8 6 8ZM8.4 9H8.14062C7.49062 9.3125 6.76875 9.5 6 9.5C5.23125 9.5 4.5125 9.3125 3.85938 9H3.6C1.6125 9 0 10.6125 0 12.6V13.5C0 14.3281 0.671875 15 1.5 15H10.5C11.3281 15 12 14.3281 12 13.5V12.6C12 10.6125 10.3875 9 8.4 9ZM15 8C16.6562 8 18 6.65625 18 5C18 3.34375 16.6562 2 15 2C13.3438 2 12 3.34375 12 5C12 6.65625 13.3438 8 15 8ZM16.5 9H16.3813C15.9469 9.15 15.4875 9.25 15 9.25C14.5125 9.25 14.0531 9.15 13.6187 9H13.5C12.8625 9 12.275 9.18437 11.7594 9.48125C12.5219 10.3031 13 11.3938 13 12.6V13.8C13 13.8688 12.9844 13.9344 12.9812 14H18.5C19.3281 14 20 13.3281 20 12.5C20 10.5656 18.4344 9 16.5 9Z"
+                    fill={mode ? "#AAAAAA" : "#fff"}
+                  />
+                </svg>
+
+                <div
+                  onClick={handleFollowPopoverOpen}
+                  className={`mt-1 ${mode ? "text-black" : "text-white"}`}
+                >
+                  {user.userFollows.length === 1
+                    ? `${user.userFollows.length} follow`
+                    : `${user.userFollows.length} follows`}
+                </div>
+              </button>
+
+              {/* follows */}
+              <Popover
+                open={followOpen}
+                anchorEl={followAnchorEl}
+                onClose={handleFollowPopoverClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                disableAutoFocus
+                disableEnforceFocus
+              >
+                <div className="h-[30vh]">
+                  {followResults.length > 0 ? (
+                    followResults.map((follow) => (
+                      <button className="hover:bg-gray-300">
+                        <div
+                          key={follow._id}
+                          className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                          onClick={() => navigate(`/users/${follow.userName}`)}
+                        >
+                          <img
+                            src={follow.profileImage}
+                            alt={`${follow.userName}'s profile`}
+                            className="w-[30px] h-[30px] object-cover rounded-full"
+                          />
+                          <div>
+                            <span>{follow.userName}</span>
+                          </div>
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="py-3 w-[400px] text-black px-5">
+                      You currently follow no one!
+                    </div>
+                  )}
+                </div>
+              </Popover>
+
+              {/*followers */}
+              <button className="flex items-center space-x-2">
+                <svg
+                  width="20"
+                  height="16"
+                  viewBox="0 0 20 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 8C7.93437 8 9.5 6.43437 9.5 4.5C9.5 2.56562 7.93437 1 6 1C4.06563 1 2.5 2.56562 2.5 4.5C2.5 6.43437 4.06563 8 6 8ZM8.4 9H8.14062C7.49062 9.3125 6.76875 9.5 6 9.5C5.23125 9.5 4.5125 9.3125 3.85938 9H3.6C1.6125 9 0 10.6125 0 12.6V13.5C0 14.3281 0.671875 15 1.5 15H10.5C11.3281 15 12 14.3281 12 13.5V12.6C12 10.6125 10.3875 9 8.4 9ZM15 8C16.6562 8 18 6.65625 18 5C18 3.34375 16.6562 2 15 2C13.3438 2 12 3.34375 12 5C12 6.65625 13.3438 8 15 8ZM16.5 9H16.3813C15.9469 9.15 15.4875 9.25 15 9.25C14.5125 9.25 14.0531 9.15 13.6187 9H13.5C12.8625 9 12.275 9.18437 11.7594 9.48125C12.5219 10.3031 13 11.3938 13 12.6V13.8C13 13.8688 12.9844 13.9344 12.9812 14H18.5C19.3281 14 20 13.3281 20 12.5C20 10.5656 18.4344 9 16.5 9Z"
+                    fill={mode ? "#AAAAAA" : "#fff"}
+                  />
+                </svg>
+
+                <div
+                  onClick={handleFollowerPopoverOpen}
+                  className={`mt-1 ${mode ? "text-black" : "text-white"}`}
+                >
+                  {user.userFollowers.length === 1
+                    ? `${user.userFollowers.length} follower`
+                    : `${user.userFollowers.length} followers`}
+                </div>
+              </button>
+
+              {/* followers */}
+              <Popover
+                open={followerOpen}
+                anchorEl={followerAnchorEl}
+                onClose={handleFollowerPopoverClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                disableAutoFocus
+                disableEnforceFocus
+              >
+                <div className="h-[30vh]">
+                  {followerResults.length > 0 ? (
+                    followerResults.map((follower) => (
+                      <button className="hover:bg-gray-300">
+                        <div
+                          key={follower._id}
+                          className="flex items-center space-x-3 py-3 w-[400px] px-5"
+                          onClick={() =>
+                            navigate(`/users/${follower.userName}`)
+                          }
+                        >
+                          <img
+                            src={follower.profileImage}
+                            alt={`${follower.userName}'s profile`}
+                            className="w-[40px] h-[40px] object-cover rounded-full"
+                          />
+                          <div>
+                            <span>{follower.userName}</span>
+                          </div>
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="py-3 text-black w-[400px] px-5">
+                      You currently have no followers!
+                    </div>
+                  )}
+                </div>
+              </Popover>
             </div>
           </div>
         </div>
@@ -995,38 +1178,6 @@ const UserProfile = () => {
 
                 {/* gallery section */}
                 <div className="flex items-center space-x-3">
-                  {/* emoji button */}
-                  <button>
-                    <em
-                      data-emoji=":grin:"
-                      className="small link"
-                      onClick={() => setShowPicker((val) => !val)}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={` ${mode ? "fill-[#AAAAAA]" : "fill-white"}`}
-                      >
-                        <path
-                          d="M1.42859 10C1.42859 5.26645 5.26645 1.42859 10 1.42859C14.7336 1.42859 18.5714 5.26645 18.5714 10C18.5714 14.7336 14.7336 18.5714 10 18.5714C5.26645 18.5714 1.42859 14.7336 1.42859 10ZM12.5 9.28573C12.7842 9.28573 13.0567 9.17285 13.2576 8.97192C13.4586 8.77099 13.5714 8.49846 13.5714 8.2143C13.5714 7.93014 13.4586 7.65762 13.2576 7.45669C13.0567 7.25576 12.7842 7.14288 12.5 7.14288C12.2159 7.14288 11.9433 7.25576 11.7424 7.45669C11.5415 7.65762 11.4286 7.93014 11.4286 8.2143C11.4286 8.49846 11.5415 8.77099 11.7424 8.97192C11.9433 9.17285 12.2159 9.28573 12.5 9.28573ZM8.57145 8.2143C8.57145 7.93014 8.45856 7.65762 8.25763 7.45669C8.0567 7.25576 7.78418 7.14288 7.50002 7.14288C7.21586 7.14288 6.94334 7.25576 6.7424 7.45669C6.54147 7.65762 6.42859 7.93014 6.42859 8.2143C6.42859 8.49846 6.54147 8.77099 6.7424 8.97192C6.94334 9.17285 7.21586 9.28573 7.50002 9.28573C7.78418 9.28573 8.0567 9.17285 8.25763 8.97192C8.45856 8.77099 8.57145 8.49846 8.57145 8.2143ZM5.94859 12.2357C5.83114 12.3157 5.75025 12.439 5.72373 12.5786C5.69721 12.7182 5.72722 12.8626 5.80716 12.98V12.9807L5.80859 12.9822L5.81002 12.9843L5.81573 12.9914C5.83799 13.0232 5.8611 13.0545 5.88502 13.085C5.93145 13.1443 5.99788 13.225 6.08502 13.32C6.31978 13.5745 6.57994 13.8042 6.86145 14.0057C7.5543 14.505 8.59859 15 10 15C11.4014 15 12.4464 14.5043 13.1386 14.0064C13.4203 13.8044 13.6807 13.5742 13.9157 13.3193C14.0054 13.2217 14.09 13.1197 14.1693 13.0136L14.185 12.9922L14.19 12.985L14.1914 12.9822L14.1922 12.9807L14.1929 12.98C14.273 12.8627 14.3032 12.7183 14.2769 12.5786C14.2506 12.439 14.1699 12.3155 14.0525 12.2354C13.9352 12.1552 13.7908 12.125 13.6511 12.1513C13.5115 12.1777 13.388 12.2584 13.3079 12.3757L13.3029 12.3829C13.2475 12.4563 13.1886 12.5271 13.1264 12.595C12.9408 12.7958 12.7352 12.9772 12.5129 13.1364C11.9643 13.5314 11.1343 13.9286 10 13.9286C8.86645 13.9286 8.03573 13.5314 7.48716 13.1364C7.26507 12.9775 7.05973 12.7963 6.8743 12.5957C6.81216 12.5279 6.75329 12.4571 6.69788 12.3836L6.69145 12.375C6.61119 12.2583 6.48798 12.1781 6.34877 12.152C6.20956 12.1259 6.06567 12.156 5.94859 12.2357Z"
-                          fill=""
-                        />
-                      </svg>
-                    </em>
-                  </button>
-
-                  <div className={`${!showPicker ? "hidden" : ""}`}>
-                    {showPicker && (
-                      <Picker
-                        onEmojiClick={onEmojiClick}
-                        reactionsDefaultOpen={true}
-                      />
-                    )}
-                  </div>
-
                   {/* submit comment button */}
                   <button
                     onClick={() => submitComment(post._id)}
