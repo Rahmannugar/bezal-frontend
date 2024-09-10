@@ -14,17 +14,17 @@ const SuccessfulReset = () => {
         </div>
       </div>
 
-      <div className="flex lg:space-x-12 xl:space-x-20 2xl:space-x-48 items-center">
+      <div className="flex md:mr-5 lg:space-x-12 xl:space-x-28 2xl:space-x-48 justify-center md:justify-start items-center">
         <div>
           <img
             src="https://i.ibb.co/Lz0D2nq/signup.png"
-            className="h-[1000px] lg:w-[50vw]"
+            className="h-[1000px] md:w-[50vw]  hidden md:block"
             alt="signup"
           />
         </div>
 
         {/* Reset password message*/}
-        <div className="flex flex-col bg-white shadow-xl rounded-[20px] py-32 px-10">
+        <div className="mt-[250px] md:mt-0 flex flex-col bg-white shadow-xl mx-6 md:mx-0 rounded-[20px] py-32 px-10">
           <h1 className="font-bold text-24px leading-[32px]">
             Password Reset Email Sent
           </h1>
