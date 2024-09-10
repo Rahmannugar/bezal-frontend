@@ -736,7 +736,7 @@ const Profile = () => {
                     key={post._id}
                     className={`${
                       mode ? "bg-white" : "bg-transparent border"
-                    } p-7 min-w-[600px] w-[50vw] max-w-[100%]  rounded-[20px] mt-10 shadow-md`}
+                    } p-7 md:min-w-[450px] lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden  rounded-[20px] mt-10 shadow-md`}
                   >
                     {/* user data */}
                     <div className="flex justify-between">
