@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { io } from "socket.io-client";
+import debounce from "lodash/debounce";
 import { useEffect, useState } from "react";
 import {
   addNotification,
@@ -35,20 +36,23 @@ const NotificationBar = () => {
   const notifications = useSelector(
     (state: RootState) => state.user.user.notifications
   );
-  console.log(notifications);
 
   const [realTimeNotifications, setRealTimeNotifications] = useState<
     Notification[]
   >([]);
 
+  const debouncedNotificationHandler = debounce((data: Notification) => {
+    setRealTimeNotifications((prevNotifications) => [
+      ...prevNotifications,
+      data,
+    ]);
+    dispatch(addNotification(data));
+  }, 2000);
+
   useEffect(() => {
     // Listen for real-time notifications
-    socket.on("newNotification", (data: Notification) => {
-      setRealTimeNotifications((prevNotifications) => [
-        ...prevNotifications,
-        data,
-      ]);
-      dispatch(addNotification(data));
+    socket.on("newNotification", (data) => {
+      debouncedNotificationHandler(data);
     });
 
     return () => {
@@ -131,7 +135,7 @@ const NotificationBar = () => {
       <div
         className={`${
           mode ? "bg-white text-black" : "bg-transparent text-white border"
-        }  min-w-[600px] w-[50vw] max-w-[100%] rounded-[20px] mt-10 shadow-md`}
+        }  md:min-w-[450px] mx-5 md:mx-0 lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden rounded-[20px] mt-10 shadow-md`}
       >
         <h1
           className={`text-center py-3 rounded-t-[20px] hover:bg-[#4385F5]
@@ -170,7 +174,9 @@ const NotificationBar = () => {
                   <div>
                     <a href={`/posts/${notif.postUrl}`}>
                       <button>
-                        <p>{notif.msg}</p>
+                        <p className={`${mode ? "text-black" : "text-white"}`}>
+                          {notif.msg}
+                        </p>
                       </button>
                     </a>
                     <h1>{formatTimeAgo(notif.createdAt)}</h1>
@@ -179,7 +185,9 @@ const NotificationBar = () => {
                   <div>
                     <a href={`/users/${notif.name}`}>
                       <button>
-                        <p>{notif.msg}</p>
+                        <p className={`${mode ? "text-black" : "text-white"}`}>
+                          {notif.msg}
+                        </p>
                       </button>
                     </a>
                     <h1>{formatTimeAgo(notif.createdAt)}</h1>
@@ -187,7 +195,9 @@ const NotificationBar = () => {
                 )}
               </div>
               {notif.read ? (
-                <h1>Read</h1>
+                <h1 className={`${mode ? "text-black" : "text-white"}`}>
+                  Read
+                </h1>
               ) : (
                 <div>
                   <button onClick={() => handleMarkAsRead(notif._id)}>
