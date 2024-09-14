@@ -91,8 +91,12 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <div>
         {isLoading ? (
-          <div className="flex justify-center h-screen items-center">
-            <GridLoader />
+          <div
+            className={`flex justify-center h-screen  items-center ${
+              mode ? "bg-white" : "bg-black"
+            }`}
+          >
+            <GridLoader color={`${mode ? "black" : "white"}`} />
           </div>
         ) : (
           <Routes>
@@ -117,7 +121,7 @@ const App = () => {
             <Route path="/reset-password/:token" element={<NewPassword />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:username" element={<ChatPage />} />
+            <Route path="/chat/:userName" element={<ChatPage />} />
           </Routes>
         )}
 

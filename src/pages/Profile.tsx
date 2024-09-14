@@ -432,7 +432,13 @@ const Profile = () => {
   return (
     <div>
       {error ? (
-        <p>{error}</p>
+        <p
+          className={`flex justify-center items-center h-screen ${
+            mode ? "text-black" : "text-white"
+          }`}
+        >
+          {error}
+        </p>
       ) : (
         user && (
           <div

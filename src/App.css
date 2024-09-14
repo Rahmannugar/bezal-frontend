@@ -3,3 +3,15 @@
 body {
     font-family: "Poppins", sans-serif;
 }
+#chat-container {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+#chat-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, and Opera */
+}
