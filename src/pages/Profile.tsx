@@ -501,7 +501,7 @@ const Profile = () => {
 
                       <div className="space-x-4">
                         <button>
-                          <a href={`/chat/${user.userName}`}>
+                          <a href={`/chat/${user._id}`}>
                             <ChatIcon
                               sx={{
                                 color: mode ? "black" : "white",
@@ -545,7 +545,7 @@ const Profile = () => {
 
                     <div className="space-x-4 mt-[10px] lg:hidden">
                       <button>
-                        <a href={`/chat/${user.userName}`}>
+                        <a href={`/chat/${user._id}`}>
                           <ChatIcon
                             sx={{
                               color: mode ? "black" : "white",

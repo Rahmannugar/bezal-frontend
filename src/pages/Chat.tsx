@@ -3,13 +3,13 @@ import { RootState } from "../states/store";
 import { User } from "./ChatPage";
 
 interface ChatProps {
-  selectedUser: User | null;
+  currentChat: User | null;
 }
 
-const Chat: React.FC<ChatProps> = ({ selectedUser }) => {
+const Chat: React.FC<ChatProps> = ({ currentChat }) => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const loggedInUser = useSelector((state: RootState) => state.user.user);
-  if (!selectedUser) {
+  if (!currentChat) {
     return <div>No user selected</div>;
   }
   return (
@@ -17,8 +17,8 @@ const Chat: React.FC<ChatProps> = ({ selectedUser }) => {
       {/* external-messages */}
       <div className="flex items-start justify-start space-x-3">
         <img
-          src={selectedUser?.profileImage}
-          alt={`${selectedUser?.firstName}'s profile`}
+          src={currentChat?.profileImage}
+          alt={`${currentChat?.firstName}'s profile`}
           className="w-[30px] h-[30px] object-cover rounded-full"
         />
         <p className="bg-blue-600 rounded-xl py-2 px-2 w-2/4">
@@ -48,8 +48,8 @@ const Chat: React.FC<ChatProps> = ({ selectedUser }) => {
       {/* external-messages */}
       <div className="flex items-start justify-start space-x-3">
         <img
-          src={selectedUser?.profileImage}
-          alt={`${selectedUser?.firstName}'s profile`}
+          src={currentChat?.profileImage}
+          alt={`${currentChat?.firstName}'s profile`}
           className="w-[30px] h-[30px] object-cover rounded-full"
         />
         <p className="bg-blue-600 rounded-xl py-2 px-2 w-2/4">

@@ -121,7 +121,7 @@ const App = () => {
             <Route path="/reset-password/:token" element={<NewPassword />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:userName" element={<ChatPage />} />
+            <Route path="/chat/:chatId" element={<ChatPage />} />
           </Routes>
         )}
 

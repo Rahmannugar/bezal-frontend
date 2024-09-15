@@ -11,6 +11,7 @@ import axios from "axios";
 import { storage } from "../storage/Firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Picker, { EmojiClickData } from "emoji-picker-react";
+import Conversation from "../components/Conversation";
 
 export interface User {
   _id: string;
@@ -28,12 +29,21 @@ export interface User {
   userFollows: string[];
 }
 
+export interface Conversation {
+  _id: string;
+  members: User[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 const ChatPage = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const user = useSelector((state: RootState) => state.user.user);
   const theme = useTheme();
-  const { userName } = useParams<{ userName: string }>();
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { chatId } = useParams<{ chatId: string }>();
+  const [currentChat, setCurrentChat] = useState<User | null>(null);
+  const [messages, setMessages] = useState([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // Backend URL from environment
@@ -45,19 +55,70 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchConversations = async () => {
       try {
-        const response = await axios.get(`${backendURL}/users/${userName}`);
+        const response = await axios.get(
+          `${backendURL}/conversations/${user._id}`,
+          {
+            withCredentials: true,
+          }
+        );
         if (response.status === 200) {
-          setSelectedUser(response.data);
+          const updatedConversations = response.data.map(
+            (conversation: Conversation) => {
+              const otherMember = conversation.members.find(
+                (member) => member._id !== user._id
+              );
+              return { otherMember };
+            }
+          );
+          setConversations(updatedConversations);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchConversations();
+
+    const createConversation = async () => {
+      try {
+        const response = await axios.post(
+          `${backendURL}/conversations`,
+          {
+            sender: user._id,
+            receiver: chatId,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          // setCurrentChat(response.data);
+          console.log(response.data);
         }
       } catch (err) {
         console.error(err);
         setError("User not found or an error occurred.");
       }
     };
+    createConversation();
+
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `${backendURL}/users/userid/${chatId}`
+        );
+        if (response.status === 200) {
+          console.log(response.data);
+          setCurrentChat(response.data);
+        }
+      } catch (err) {
+        setError("User not found or an error occurred.");
+        console.error(err);
+      }
+    };
     fetchUser();
-  }, [userName, backendURL]);
+  }, []);
 
   const [showPicker, setShowPicker] = useState(false);
   const [images, setImages] = useState<File[]>([]);
@@ -147,16 +208,13 @@ const ChatPage = () => {
             />
           </div>
 
-          <button className="flex w-full space-x-3 mt-5 hover:bg-gray-300 p-3">
-            <img
-              src={selectedUser?.profileImage}
-              alt={`${selectedUser?.firstName}'s profile`}
-              className="w-[30px] h-[30px] object-cover rounded-full"
+          {conversations.map((conversation) => (
+            <Conversation
+              key={conversation._id}
+              conversation={conversation}
+              currentChat={currentChat}
             />
-            <h1 className={`${mode ? "text-black" : "text-white"} `}>
-              {selectedUser?.userName}
-            </h1>
-          </button>
+          ))}
         </div>
         {/* main chat */}
         <div
@@ -172,12 +230,12 @@ const ChatPage = () => {
             >
               {error}
             </p>
-          ) : selectedUser ? (
+          ) : currentChat ? (
             <div
               className="flex-grow overflow-y-auto p-3 relative"
               id="chat-container"
             >
-              <Chat selectedUser={selectedUser} />
+              <Chat currentChat={currentChat} />
               <div className="fixed bottom-3">
                 <div className="flex flex-shrink-0 relative">
                   <textarea
