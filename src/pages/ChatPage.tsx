@@ -94,7 +94,7 @@ const ChatPage = () => {
         );
         if (response.status === 200) {
           // setCurrentChat(response.data);
-          console.log(response.data);
+          //console.log(response.data);
         }
       } catch (err) {
         console.error(err);
@@ -103,21 +103,22 @@ const ChatPage = () => {
     };
     createConversation();
 
-    const fetchUser = async () => {
+    const getMessages = async () => {
+      console.log(currentChat?._id);
       try {
         const response = await axios.get(
-          `${backendURL}/users/userid/${chatId}`
+          `${backendURL}/messages/66e6bdf4f9c1e3f0ecdd1137`,
+          {
+            withCredentials: true,
+          }
         );
-        if (response.status === 200) {
-          console.log(response.data);
-          setCurrentChat(response.data);
-        }
+        // console.log(response.data);
       } catch (err) {
-        setError("User not found or an error occurred.");
         console.error(err);
+        setError("Couldn't fetch messages.");
       }
     };
-    fetchUser();
+    getMessages();
   }, []);
 
   const [showPicker, setShowPicker] = useState(false);
@@ -210,9 +211,9 @@ const ChatPage = () => {
 
           {conversations.map((conversation) => (
             <Conversation
+              setCurrentChat={setCurrentChat}
               key={conversation._id}
               conversation={conversation}
-              currentChat={currentChat}
             />
           ))}
         </div>
@@ -241,7 +242,7 @@ const ChatPage = () => {
                   <textarea
                     onChange={handleMessageChange}
                     className={`min-h-[40px] relative pt-3 w-screen rounded-md resize-none border-none  ${
-                      mode ? "bg-white text-black" : " text-white"
+                      mode ? "bg-gray-400 text-black" : " text-black"
                     } outline placeholder-[#C5C7C8] `}
                     placeholder="Write a message"
                     value={message}
