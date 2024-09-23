@@ -36,12 +36,18 @@ export interface Conversation {
   updatedAt: string;
 }
 
+interface CurrentConversation {
+  otherMember: User;
+  conversation: Conversation;
+}
+
 const ChatPage = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const user = useSelector((state: RootState) => state.user.user);
   const theme = useTheme();
   const { chatId } = useParams<{ chatId: string }>();
-  const [currentChat, setCurrentChat] = useState<User | null>(null);
+  const [currentConversation, setCurrentConversation] =
+    useState<CurrentConversation | null>(null);
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -93,7 +99,15 @@ const ChatPage = () => {
           }
         );
         if (response.status === 200) {
-          setCurrentChat(response.data);
+          const newConversation = response.data;
+
+          const otherMember = newConversation.members.find(
+            (member: User) => member._id !== user._id
+          );
+          setCurrentConversation({
+            otherMember,
+            conversation: newConversation,
+          });
         }
       } catch (err) {
         console.error(err);
@@ -101,24 +115,25 @@ const ChatPage = () => {
       }
     };
     createConversation();
+  }, []);
 
+  useEffect(() => {
     const getMessages = async () => {
       try {
         const response = await axios.get(
-          `${backendURL}/messages/66e6bdf4f9c1e3f0ecdd1137`,
+          `${backendURL}/messages/${currentConversation?.conversation._id}`,
           {
             withCredentials: true,
           }
         );
-        console.log(response.data);
+        setMessages(response.data);
       } catch (err) {
         console.error(err);
         setError("Couldn't fetch messages.");
       }
     };
     getMessages();
-  }, []);
-
+  }, [currentConversation]);
   const [showPicker, setShowPicker] = useState(false);
   const [images, setImages] = useState<File[]>([]);
 
@@ -209,10 +224,10 @@ const ChatPage = () => {
 
           {conversations.map((conversation) => (
             <Conversation
-              setCurrentChat={setCurrentChat}
               key={conversation._id}
-              currentChat={currentChat}
+              setCurrentConversation={setCurrentConversation}
               conversation={conversation}
+              currentConversation={currentConversation}
             />
           ))}
         </div>
@@ -230,12 +245,15 @@ const ChatPage = () => {
             >
               {error}
             </p>
-          ) : currentChat ? (
+          ) : currentConversation ? (
             <div
               className="flex-grow overflow-y-auto p-3 relative"
               id="chat-container"
             >
-              <Chat currentChat={currentChat} />
+              <Chat
+                currentConversation={currentConversation}
+                messages={messages}
+              />
               <div className="fixed bottom-3">
                 <div className="flex flex-shrink-0 relative">
                   <textarea

@@ -72,13 +72,14 @@ const HomeFeedBar = () => {
         month: "short",
         day: "numeric",
       });
-    } else if (diffInHrs >= 72) {
-      // After 72 hours, show days ago
-      return diffInDays + " days ago";
+    } else if (diffInDays > 0) {
+      // Show days ago if more than 1 day but less than 7 days
+      return diffInDays === 1 ? "1 day ago" : `${diffInDays} days ago`;
     } else if (diffInHrs > 0) {
-      // Before 72 hours, show hours ago
-      return diffInHrs + " hours ago";
+      // Show hours ago if more than 1 hour but less than 24 hours
+      return diffInHrs === 1 ? "1 hour ago" : `${diffInHrs} hours ago`;
     } else if (diffInMins > 0) {
+      // Show minutes ago if more than 1 minute but less than 1 hour
       return diffInMins === 1 ? "1 minute ago" : `${diffInMins} minutes ago`;
     } else {
       return "Just now";
