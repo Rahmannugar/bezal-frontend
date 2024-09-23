@@ -1,14 +1,15 @@
-import { User } from "../pages/ChatPage";
 import { RootState } from "../states/store";
 import { useSelector } from "react-redux";
 
 interface ConversationProps {
   conversation: any;
-  setCurrentChat: any;
+  currentChat: any;
+  setCurrentChat: (otherMember: any, conversation: any) => void;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
   conversation,
+  currentChat,
   setCurrentChat,
 }) => {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -16,8 +17,12 @@ const Conversation: React.FC<ConversationProps> = ({
   return (
     <div>
       <button
-        onClick={setCurrentChat(conversation.otherMember)}
-        className="flex w-full space-x-3 mt-5 hover:bg-gray-300 p-3"
+        onClick={() =>
+          setCurrentChat(conversation.otherMember, conversation.conversation)
+        }
+        className={`flex w-full space-x-3 mt-5 hover:bg-gray-300 p-3 ${
+          currentChat ? "bg-gray-400" : ""
+        }`}
       >
         <img
           src={conversation.otherMember.profileImage}
@@ -31,4 +36,5 @@ const Conversation: React.FC<ConversationProps> = ({
     </div>
   );
 };
+
 export default Conversation;

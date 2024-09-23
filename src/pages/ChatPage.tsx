@@ -69,7 +69,7 @@ const ChatPage = () => {
               const otherMember = conversation.members.find(
                 (member) => member._id !== user._id
               );
-              return { otherMember };
+              return { otherMember, conversation };
             }
           );
           setConversations(updatedConversations);
@@ -93,8 +93,7 @@ const ChatPage = () => {
           }
         );
         if (response.status === 200) {
-          // setCurrentChat(response.data);
-          //console.log(response.data);
+          setCurrentChat(response.data);
         }
       } catch (err) {
         console.error(err);
@@ -104,7 +103,6 @@ const ChatPage = () => {
     createConversation();
 
     const getMessages = async () => {
-      console.log(currentChat?._id);
       try {
         const response = await axios.get(
           `${backendURL}/messages/66e6bdf4f9c1e3f0ecdd1137`,
@@ -112,7 +110,7 @@ const ChatPage = () => {
             withCredentials: true,
           }
         );
-        // console.log(response.data);
+        console.log(response.data);
       } catch (err) {
         console.error(err);
         setError("Couldn't fetch messages.");
@@ -213,6 +211,7 @@ const ChatPage = () => {
             <Conversation
               setCurrentChat={setCurrentChat}
               key={conversation._id}
+              currentChat={currentChat}
               conversation={conversation}
             />
           ))}

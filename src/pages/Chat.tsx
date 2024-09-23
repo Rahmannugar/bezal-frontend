@@ -13,7 +13,7 @@ const Chat: React.FC<ChatProps> = ({ currentChat }) => {
     return <div>No user selected</div>;
   }
   return (
-    <div className={`${mode ? " text-black" : " text-white "}  px-5 py-5`}>
+    <div className={`${mode ? " text-black" : " text-white "}   px-5 py-5`}>
       {/* external-messages */}
       <div className="flex items-start justify-start space-x-3">
         <img
