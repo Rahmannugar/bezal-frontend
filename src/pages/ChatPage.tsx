@@ -319,11 +319,11 @@ const ChatPage = () => {
                 currentConversation={currentConversation}
                 messages={messages}
               />
-              <div className="fixed  bottom-3">
+              <div className=" bottom-3">
                 <div className="flex flex-shrink-0 relative">
                   <textarea
                     onChange={handleMessageChange}
-                    className={`min-h-[40px] relative place-content-center rounded-md resize-none border-none  ${
+                    className={`min-h-[40px] relative w-screen place-content-center rounded-md resize-none border-none  ${
                       mode ? "bg-gray-400 text-black" : " text-black"
                     } outline placeholder-[#C5C7C8] `}
                     placeholder="Write a message"

@@ -69,7 +69,11 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
             {/* Render logged-in user messages */}
             {isLoggedInUserMessage ? (
               <div className="flex items-end justify-end space-x-3 my-2">
-                <div className="flex flex-col p-3 bg-gray-500 rounded-xl max-w-2/4 ">
+                <div
+                  className={`flex flex-col p-3 ${
+                    message.text == "" ? "" : "bg-gray-500"
+                  } max-w-[60%] rounded-xl`}
+                >
                   <p>{message.text}</p>
                   <div
                     className={`grid gap-2 mt-2 ${
@@ -80,11 +84,11 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
                       <img
                         key={index}
                         src={imageUrl}
-                        alt={`Post Image ${index}`}
-                        className={`rounded-[20px] h-[250px] w-[300px] ${
+                        alt={`Image ${index}`}
+                        className={`rounded-[20px] py-1 h-[180px] w-[200px] ${
                           message.images.length == 1
-                            ? "object-cover"
-                            : "object-contain"
+                            ? "object cover"
+                            : "object-cover"
                         }  `}
                       />
                     ))}
