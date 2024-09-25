@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../pages/ChatPage";
 
 export interface Notification {
   _id: string;
@@ -8,6 +9,13 @@ export interface Notification {
   postUrl: string;
   name: string;
   createdAt: Date;
+}
+
+export interface Conversation {
+  _id: string;
+  members: User[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UserState {
@@ -31,6 +39,7 @@ export interface UserState {
     comments: string[];
     notifications: Notification[];
     readNotifications: boolean;
+    conversation: Conversation | null;
   };
   isLoggedIn: boolean;
   mode: boolean;
@@ -57,6 +66,7 @@ const initialState: UserState = {
     comments: [],
     notifications: [],
     readNotifications: true,
+    conversation: null,
   },
   isLoggedIn: false,
   mode: true,
@@ -100,6 +110,9 @@ const userSlice = createSlice({
         })
       );
     },
+    setCurrentConversation(state, action: PayloadAction<Conversation | null>) {
+      state.user.conversation = action.payload;
+    },
   },
 });
 
@@ -110,5 +123,6 @@ export const {
   addNotification,
   markNotificationRead,
   markNotificationsRead,
+  setCurrentConversation,
 } = userSlice.actions;
 export default userSlice.reducer;

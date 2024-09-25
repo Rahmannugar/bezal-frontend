@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import LeftBar from "../components/LeftBar";
-import { setUser } from "../states/userSlice";
+import { setCurrentConversation, setUser } from "../states/userSlice";
 import SendIcon from "@mui/icons-material/Send";
 
 interface User {
@@ -221,6 +221,31 @@ const Profile = () => {
       return diffInMins === 1 ? "1 minute ago" : `${diffInMins} minutes ago`;
     } else {
       return "Just now";
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axios.post(
+        `${backendURL}/conversations`,
+        {
+          sender: loggedInUser._id,
+          receiver: user?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        const newConversation = response.data;
+        dispatch(setCurrentConversation(newConversation));
+        setTimeout(() => {
+          navigate("/chat");
+        }, 1000);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("User not found or an error occurred.");
     }
   };
 
@@ -501,15 +526,15 @@ const Profile = () => {
                       </div>
 
                       <div className="space-x-4">
-                        <button>
-                          <a href={`/chat/${user._id}`}>
-                            <ChatIcon
-                              sx={{
-                                color: mode ? "black" : "white",
-                                fontSize: 36,
-                              }}
-                            />
-                          </a>
+                        <button onClick={createConversation}>
+                          {/* <a href={`/chat/${user._id}`}> */}
+                          <ChatIcon
+                            sx={{
+                              color: mode ? "black" : "white",
+                              fontSize: 36,
+                            }}
+                          />
+                          {/* </a> */}
                         </button>
                         <button
                           onClick={handleFollow}
@@ -697,7 +722,7 @@ const Profile = () => {
                             ))
                           ) : (
                             <div className="py-3 w-[400px] text-black px-5">
-                              You currently follow no one!
+                              {user.userName} currently follow no one!
                             </div>
                           )}
                         </div>
@@ -770,7 +795,7 @@ const Profile = () => {
                             ))
                           ) : (
                             <div className="py-3 text-black w-[400px] px-5">
-                              You currently have no followers!
+                              {user.userName} currently have no followers!
                             </div>
                           )}
                         </div>
@@ -891,7 +916,7 @@ const Profile = () => {
                           ))
                         ) : (
                           <div className="py-3 w-[400px] text-black px-5">
-                            You currently follow no one!
+                            {user.userName} currently follow no one!
                           </div>
                         )}
                       </div>
@@ -962,7 +987,7 @@ const Profile = () => {
                           ))
                         ) : (
                           <div className="py-3 text-black w-[400px] px-5">
-                            You currently have no followers!
+                            {user.userName} currently have no followers!
                           </div>
                         )}
                       </div>

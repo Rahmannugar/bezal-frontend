@@ -89,7 +89,7 @@ const App = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <div>
+      <div className="overflow-hidden">
         {isLoading ? (
           <div
             className={`flex justify-center h-screen  items-center ${
@@ -121,7 +121,6 @@ const App = () => {
             <Route path="/reset-password/:token" element={<NewPassword />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:chatId" element={<ChatPage />} />
           </Routes>
         )}
 

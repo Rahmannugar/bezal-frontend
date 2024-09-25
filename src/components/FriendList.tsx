@@ -59,7 +59,7 @@ const FriendList = () => {
         <div>
           {followerResults.length > 0 ? (
             followerResults.map((follower) => (
-              <button className="hover:text-[#4385F5]">
+              <button className="hover:text-[#4385F5] flex flex-col">
                 <div
                   key={follower._id}
                   className="flex items-center justify-center space-x-3 mt-5"
@@ -85,7 +85,7 @@ const FriendList = () => {
         <h1>Following</h1>
         {followResults.length > 0 ? (
           followResults.map((follow) => (
-            <button className="hover:text-[#4385F5]">
+            <button className="hover:text-[#4385F5] flex flex-col">
               <div
                 key={follow._id}
                 className="flex items-center justify-center space-x-3 mt-5"

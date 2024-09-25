@@ -52,7 +52,6 @@ const ChatPage = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const user = useSelector((state: RootState) => state.user.user);
   const theme = useTheme();
-  const { chatId } = useParams<{ chatId: string }>();
   const [currentConversation, setCurrentConversation] =
     useState<CurrentConversation | null>(null);
   const [messages, setMessages] = useState<Messages[]>([]);
@@ -94,37 +93,30 @@ const ChatPage = () => {
   }, [backendURL, user._id, messages]);
 
   useEffect(() => {
-    if (chatId && !currentConversation) {
-      const createConversation = async () => {
-        try {
-          const response = await axios.post(
-            `${backendURL}/conversations`,
-            {
-              sender: user._id,
-              receiver: chatId,
-            },
-            {
-              withCredentials: true,
-            }
-          );
-          const newConversation = response.data;
-          console.log(response.data);
+    if (!currentConversation) {
+      const getConversation = async () => {
+        const newConversation = user?.conversation;
+
+        if (newConversation) {
           const otherMember = newConversation.members.find(
             (member: User) => member._id !== user._id
           );
-
-          setCurrentConversation({
-            otherMember,
-            conversation: newConversation,
-          });
-        } catch (err) {
-          console.error(err);
-          setError("Couldn't fetch or create conversation.");
+          if (otherMember) {
+            // Check if otherMember is found
+            setCurrentConversation({
+              otherMember,
+              conversation: newConversation,
+            });
+          } else {
+            console.error("No other member found in the conversation");
+          }
+        } else {
+          console.error("No conversation found for the user");
         }
       };
-      createConversation();
+      getConversation();
     }
-  }, [chatId, currentConversation]);
+  }, [currentConversation]);
 
   useEffect(() => {
     if (currentConversation) {
