@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import LeftBar from "../components/LeftBar";
-import { setCurrentConversation, setUser } from "../states/userSlice";
+import { setConversation, setUser } from "../states/userSlice";
 import SendIcon from "@mui/icons-material/Send";
 
 interface User {
@@ -238,7 +238,7 @@ const Profile = () => {
       );
       if (response.status === 200) {
         const newConversation = response.data;
-        dispatch(setCurrentConversation(newConversation));
+        dispatch(setConversation(newConversation));
         setTimeout(() => {
           navigate("/chat");
         }, 1000);

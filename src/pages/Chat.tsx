@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { User } from "./ChatPage";
+import { useNavigate } from "react-router-dom";
 
 interface ChatProps {
   currentConversation: any;
@@ -36,13 +37,20 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
     }
   };
 
+  const navigate = useNavigate();
+
   if (!currentConversation) {
     return <div>No user selected</div>;
   }
 
   return (
     <div className={`${mode ? "text-black" : "text-white"} px-5 py-5`}>
-      <div className="flex flex-col space-y-2 justify-center items-center">
+      <div
+        onClick={() =>
+          navigate(`/users/${currentConversation?.otherMember.userName}`)
+        }
+        className="flex flex-col space-y-2 justify-center items-center"
+      >
         <img
           src={currentConversation?.otherMember?.profileImage}
           alt={`${currentConversation?.otherMember.userName}'s profile`}

@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { useEffect, useState, useRef, ChangeEvent } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { storage } from "../storage/Firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -12,6 +11,7 @@ import Chat from "./Chat";
 import { useTheme } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ClearIcon from "@mui/icons-material/Clear";
+import { setConversation } from "../states/userSlice";
 
 export interface User {
   _id: string;
@@ -75,14 +75,26 @@ const ChatPage = () => {
           }
         );
         if (response.status === 200) {
-          const updatedConversations = response.data.map(
-            (conversation: Conversation) => {
+          const updatedConversations = response.data
+            .map((conversation: Conversation) => {
               const otherMember = conversation.members.find(
                 (member) => member._id !== user._id
               );
               return { otherMember, conversation };
-            }
-          );
+            })
+            .sort(
+              (
+                a: { conversation: { updatedAt: string | number | Date } },
+                b: { conversation: { updatedAt: string | number | Date } }
+              ) => {
+                // Sorting conversations by updatedAt in descending order
+                return (
+                  new Date(b.conversation.updatedAt).getTime() -
+                  new Date(a.conversation.updatedAt).getTime()
+                );
+              }
+            );
+
           setConversations(updatedConversations);
         }
       } catch (err) {
@@ -91,6 +103,8 @@ const ChatPage = () => {
     };
     fetchConversations();
   }, [backendURL, user._id, messages]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!currentConversation) {
@@ -106,6 +120,22 @@ const ChatPage = () => {
             setCurrentConversation({
               otherMember,
               conversation: newConversation,
+            });
+
+            setTimeout(() => {
+              dispatch(setConversation(null));
+            }, 5000);
+
+            setConversations((prevConversations) => {
+              const existingConversationIndex = prevConversations.findIndex(
+                (conv) => conv._id === newConversation._id
+              );
+              if (existingConversationIndex !== -1) {
+                const updatedConversations = [...prevConversations];
+                updatedConversations.splice(existingConversationIndex, 1);
+                return [newConversation, ...updatedConversations];
+              }
+              return [newConversation, ...prevConversations];
             });
           } else {
             console.error("No other member found in the conversation");
@@ -198,21 +228,21 @@ const ChatPage = () => {
         setNewMessage("");
         setImages([]);
 
-        // Add the conversation to the conversations array if it doesn't exist
-        const existingConversationIndex = conversations.findIndex(
-          (conv) => conv._id === currentConversation?.conversation._id
-        );
+        setConversations((prevConversations) => {
+          const existingConversationIndex = prevConversations.findIndex(
+            (conv) => conv._id === currentConversation?.conversation._id
+          );
 
-        if (existingConversationIndex === -1) {
-          const newConversation = currentConversation?.conversation;
-
-          if (newConversation) {
-            setConversations((prevConversations) => [
-              ...prevConversations,
-              newConversation,
-            ]);
+          if (existingConversationIndex !== -1) {
+            // If the conversation exists, remove it from its current position
+            const updatedConversations = [...prevConversations];
+            updatedConversations.splice(existingConversationIndex, 1);
+            return [currentConversation?.conversation, ...updatedConversations]; // Prepend the updated conversation
           }
-        }
+
+          // If it doesn't exist, prepend it
+          return [currentConversation?.conversation, ...prevConversations];
+        });
       }
     } catch (error) {
       console.error("Error sending message:", error);

@@ -110,7 +110,7 @@ const userSlice = createSlice({
         })
       );
     },
-    setCurrentConversation(state, action: PayloadAction<Conversation | null>) {
+    setConversation(state, action: PayloadAction<Conversation | null>) {
       state.user.conversation = action.payload;
     },
   },
@@ -123,6 +123,6 @@ export const {
   addNotification,
   markNotificationRead,
   markNotificationsRead,
-  setCurrentConversation,
+  setConversation,
 } = userSlice.actions;
 export default userSlice.reducer;
