@@ -91,7 +91,40 @@ const ChatPage = () => {
       }
     };
     fetchConversations();
-  }, [backendURL, user._id]);
+  }, [backendURL, user._id, messages]);
+
+  useEffect(() => {
+    if (chatId && !currentConversation) {
+      const createConversation = async () => {
+        try {
+          const response = await axios.post(
+            `${backendURL}/conversations`,
+            {
+              sender: user._id,
+              receiver: chatId,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+          const newConversation = response.data;
+          console.log(response.data);
+          const otherMember = newConversation.members.find(
+            (member: User) => member._id !== user._id
+          );
+
+          setCurrentConversation({
+            otherMember,
+            conversation: newConversation,
+          });
+        } catch (err) {
+          console.error(err);
+          setError("Couldn't fetch or create conversation.");
+        }
+      };
+      createConversation();
+    }
+  }, [chatId, currentConversation]);
 
   useEffect(() => {
     if (currentConversation) {
@@ -151,35 +184,7 @@ const ChatPage = () => {
 
   const handleSendMessage = async () => {
     try {
-      let conversationId = currentConversation?.conversation._id;
-
-      // If there's no conversation, create it first
-      if (!conversationId) {
-        const response = await axios.post(
-          `${backendURL}/conversations`,
-          {
-            sender: user._id,
-            receiver: chatId,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-
-        if (response.status === 200) {
-          const newConversation = response.data;
-          conversationId = newConversation._id;
-
-          const otherMember = newConversation.members.find(
-            (member: User) => member._id !== user._id
-          );
-
-          setCurrentConversation({
-            otherMember,
-            conversation: newConversation,
-          });
-        }
-      }
+      const conversationId = currentConversation?.conversation._id;
 
       const uploadedImageUrls = await Promise.all(
         images.map((image) => uploadImageAndGetUrl(image))
@@ -189,7 +194,7 @@ const ChatPage = () => {
         conversationId,
         senderId: user._id,
         text: newMessage,
-        images: uploadedImageUrls || "",
+        images: uploadedImageUrls || [],
       };
 
       const response = await axios.post(`${backendURL}/messages`, messageData, {
@@ -200,6 +205,22 @@ const ChatPage = () => {
         setMessages([...messages, response.data]);
         setNewMessage("");
         setImages([]);
+
+        // Add the conversation to the conversations array if it doesn't exist
+        const existingConversationIndex = conversations.findIndex(
+          (conv) => conv._id === currentConversation?.conversation._id
+        );
+
+        if (existingConversationIndex === -1) {
+          const newConversation = currentConversation?.conversation;
+
+          if (newConversation) {
+            setConversations((prevConversations) => [
+              ...prevConversations,
+              newConversation,
+            ]);
+          }
+        }
       }
     } catch (error) {
       console.error("Error sending message:", error);

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 interface ConversationProps {
-  conversation: any;
+  conversation: any; // Consider typing this more strictly if possible
   currentConversation: any;
   setCurrentConversation: any;
 }
@@ -17,7 +17,9 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleConversationClick = async () => {
     try {
-      if (!conversation.conversation._id) {
+      if (conversation?.conversation?._id) {
+        setCurrentConversation(conversation);
+      } else {
         const backendURL = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(
           `${backendURL}/conversations`,
@@ -29,27 +31,31 @@ const Conversation: React.FC<ConversationProps> = ({
             withCredentials: true,
           }
         );
+
         if (response.status === 200) {
           setCurrentConversation({
             otherMember: conversation.otherMember,
             conversation: response.data,
           });
         }
-      } else {
-        setCurrentConversation(conversation);
       }
     } catch (err) {
       console.error("Failed to create conversation", err);
     }
   };
 
+  // Defensive check to prevent rendering issues
+  if (!conversation || !conversation.otherMember) {
+    return null; // Or some loading/error state
+  }
+
   return (
     <div>
       <button
         onClick={handleConversationClick}
         className={`flex w-full space-x-3 mt-5 hover:bg-gray-300 p-3 ${
-          currentConversation?.conversation._id ===
-          conversation.conversation._id
+          currentConversation?.conversation?._id ===
+          conversation.conversation?._id
             ? "bg-gray-400"
             : ""
         }`}
