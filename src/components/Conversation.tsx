@@ -1,5 +1,6 @@
 import { RootState } from "../states/store";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 interface ConversationProps {
   conversation: any;
@@ -14,12 +15,38 @@ const Conversation: React.FC<ConversationProps> = ({
 }) => {
   const mode = useSelector((state: RootState) => state.user.mode);
 
+  const handleConversationClick = async () => {
+    try {
+      if (!conversation.conversation._id) {
+        const backendURL = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.post(
+          `${backendURL}/conversations`,
+          {
+            sender: conversation.senderId,
+            receiver: conversation.otherMember._id,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          setCurrentConversation({
+            otherMember: conversation.otherMember,
+            conversation: response.data,
+          });
+        }
+      } else {
+        setCurrentConversation(conversation);
+      }
+    } catch (err) {
+      console.error("Failed to create conversation", err);
+    }
+  };
+
   return (
     <div>
       <button
-        onClick={() =>
-          setCurrentConversation(conversation, conversation.otherMember)
-        }
+        onClick={handleConversationClick}
         className={`flex w-full space-x-3 mt-5 hover:bg-gray-300 p-3 ${
           currentConversation?.conversation._id ===
           conversation.conversation._id

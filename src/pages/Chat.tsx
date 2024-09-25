@@ -42,6 +42,14 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
 
   return (
     <div className={`${mode ? "text-black" : "text-white"} px-5 py-5`}>
+      <div className="flex flex-col space-y-2 justify-center items-center">
+        <img
+          src={currentConversation?.otherMember?.profileImage}
+          alt={`${currentConversation?.otherMember.userName}'s profile`}
+          className="w-[50px] h-[50px] object-cover rounded-full"
+        />
+        <h1>{currentConversation?.otherMember.userName}</h1>
+      </div>
       {messages.map((message, index) => {
         const isLoggedInUserMessage = message.senderId === loggedInUser._id;
 
@@ -53,26 +61,52 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
             {/* Render logged-in user messages */}
             {isLoggedInUserMessage ? (
               <div className="flex items-end justify-end space-x-3 my-2">
-                <p className="bg-gray-500 rounded-xl py-2 px-2 w-2/4">
-                  {message.text}
-                </p>
-                <img
-                  src={loggedInUser.profileImage}
-                  alt={`${loggedInUser.firstName}'s profile`}
-                  className="w-[30px] h-[30px] object-cover rounded-full"
-                />
+                <div className="flex flex-col p-3 bg-gray-500 rounded-xl max-w-2/4 ">
+                  <p>{message.text}</p>
+                  <div
+                    className={`grid gap-2 mt-2 ${
+                      message.images.length >= 2 && "grid-cols-2"
+                    } ${message.images.length == 4 && "grid-cols-4"}`}
+                  >
+                    {message.images.map((imageUrl, index) => (
+                      <img
+                        key={index}
+                        src={imageUrl}
+                        alt={`Post Image ${index}`}
+                        className={`rounded-[20px] h-[250px] w-[300px] ${
+                          message.images.length == 1
+                            ? "object-cover"
+                            : "object-contain"
+                        }  `}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             ) : (
               // Render other user's messages
               <div className="flex items-start justify-start space-x-3 my-2">
-                <img
-                  src={currentConversation?.otherMember?.profileImage}
-                  alt={`${currentConversation?.userName}'s profile`}
-                  className="w-[30px] h-[30px] object-cover rounded-full"
-                />
-                <p className="bg-blue-600 rounded-xl py-2 px-2 w-2/4">
-                  {message.text}
-                </p>
+                <div className="bg-blue-600 flex flex-col p-3 rounded-xl max-w-2/4">
+                  <p>{message.text}</p>
+                  <div
+                    className={`grid gap-2 mt-2 ${
+                      message.images.length >= 2 && "grid-cols-2"
+                    } ${message.images.length == 4 && "grid-cols-4"}`}
+                  >
+                    {message.images.map((imageUrl, index) => (
+                      <img
+                        key={index}
+                        src={imageUrl}
+                        alt={`Post Image ${index}`}
+                        className={`rounded-[20px] h-[250px] w-[300px] ${
+                          message.images.length == 1
+                            ? "object-cover"
+                            : "object-contain"
+                        }  `}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
             {/* Time formatting for both users */}

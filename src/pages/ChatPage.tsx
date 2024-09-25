@@ -1,17 +1,17 @@
-import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { useTheme } from "@mui/material";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import Chat from "./Chat";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
-import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
 import { storage } from "../storage/Firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Picker, { EmojiClickData } from "emoji-picker-react";
+import Navbar from "../components/Navbar";
 import Conversation from "../components/Conversation";
+import Chat from "./Chat";
+import { useTheme } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export interface User {
   _id: string;
@@ -36,6 +36,13 @@ export interface Conversation {
   updatedAt: string;
 }
 
+export interface Messages {
+  conversationId: string;
+  senderId: string;
+  text: string;
+  images: string[];
+}
+
 interface CurrentConversation {
   otherMember: User;
   conversation: Conversation;
@@ -48,16 +55,15 @@ const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string }>();
   const [currentConversation, setCurrentConversation] =
     useState<CurrentConversation | null>(null);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Messages[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Backend URL from environment
   const backendURL = import.meta.env.VITE_BACKEND_URL;
-  const [message, setMessage] = useState("");
+  const [newMessage, setNewMessage] = useState("");
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+    setNewMessage(e.target.value);
   };
 
   useEffect(() => {
@@ -85,63 +91,36 @@ const ChatPage = () => {
       }
     };
     fetchConversations();
-
-    const createConversation = async () => {
-      try {
-        const response = await axios.post(
-          `${backendURL}/conversations`,
-          {
-            sender: user._id,
-            receiver: chatId,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-        if (response.status === 200) {
-          const newConversation = response.data;
-
-          const otherMember = newConversation.members.find(
-            (member: User) => member._id !== user._id
-          );
-          setCurrentConversation({
-            otherMember,
-            conversation: newConversation,
-          });
-        }
-      } catch (err) {
-        console.error(err);
-        setError("User not found or an error occurred.");
-      }
-    };
-    createConversation();
-  }, []);
+  }, [backendURL, user._id]);
 
   useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const response = await axios.get(
-          `${backendURL}/messages/${currentConversation?.conversation._id}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setMessages(response.data);
-      } catch (err) {
-        console.error(err);
-        setError("Couldn't fetch messages.");
-      }
-    };
-    getMessages();
-  }, [currentConversation]);
-  const [showPicker, setShowPicker] = useState(false);
+    if (currentConversation) {
+      const getMessages = async () => {
+        try {
+          const response = await axios.get(
+            `${backendURL}/messages/${currentConversation.conversation._id}`,
+            {
+              withCredentials: true,
+            }
+          );
+          setMessages(response.data);
+        } catch (err) {
+          console.error(err);
+          setError("Couldn't fetch messages.");
+        }
+      };
+      getMessages();
+    }
+  }, [backendURL, currentConversation]);
+
   const [images, setImages] = useState<File[]>([]);
+  const [showPicker, setShowPicker] = useState(false);
 
   const pickerRef = useRef<HTMLDivElement>(null);
 
   //handle emoji
   const onEmojiClick = (emojiObject: EmojiClickData) => {
-    setMessage((prevInput) => prevInput + emojiObject.emoji);
+    setNewMessage((prevInput) => prevInput + emojiObject.emoji);
     setShowPicker(false);
   };
 
@@ -164,11 +143,68 @@ const ChatPage = () => {
     }
   };
 
-  // Firebase image upload function
   const uploadImageAndGetUrl = async (file: File) => {
-    const storageRef = ref(storage, `messages/${user}/${file.name}`);
+    const storageRef = ref(storage, `messages/${user._id}/${file.name}`);
     await uploadBytes(storageRef, file);
     return await getDownloadURL(storageRef);
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      let conversationId = currentConversation?.conversation._id;
+
+      // If there's no conversation, create it first
+      if (!conversationId) {
+        const response = await axios.post(
+          `${backendURL}/conversations`,
+          {
+            sender: user._id,
+            receiver: chatId,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          const newConversation = response.data;
+          conversationId = newConversation._id;
+
+          const otherMember = newConversation.members.find(
+            (member: User) => member._id !== user._id
+          );
+
+          setCurrentConversation({
+            otherMember,
+            conversation: newConversation,
+          });
+        }
+      }
+
+      const uploadedImageUrls = await Promise.all(
+        images.map((image) => uploadImageAndGetUrl(image))
+      );
+
+      const messageData = {
+        conversationId,
+        senderId: user._id,
+        text: newMessage,
+        images: uploadedImageUrls || "",
+      };
+
+      const response = await axios.post(`${backendURL}/messages`, messageData, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        setMessages([...messages, response.data]);
+        setNewMessage("");
+        setImages([]);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setError("Failed to send message.");
+    }
   };
 
   return (
@@ -198,23 +234,8 @@ const ChatPage = () => {
               </button>
             </a>
           </div>
-          {/* search field */}
+
           <div className="flex justify-start items-center space-x-1 w-full h-[40px] px-3 py-3 border-[2px] border-gray-300 rounded-[10px] bg-white">
-            <svg
-              className="w-4 h-4 text-gray-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
             <input
               type="text"
               placeholder="Search"
@@ -231,6 +252,7 @@ const ChatPage = () => {
             />
           ))}
         </div>
+
         {/* main chat */}
         <div
           className={`${
@@ -254,15 +276,15 @@ const ChatPage = () => {
                 currentConversation={currentConversation}
                 messages={messages}
               />
-              <div className="fixed bottom-3">
+              <div className="fixed  bottom-3">
                 <div className="flex flex-shrink-0 relative">
                   <textarea
                     onChange={handleMessageChange}
-                    className={`min-h-[40px] relative pt-3 w-screen rounded-md resize-none border-none  ${
+                    className={`min-h-[40px] relative place-content-center rounded-md resize-none border-none  ${
                       mode ? "bg-gray-400 text-black" : " text-black"
                     } outline placeholder-[#C5C7C8] `}
                     placeholder="Write a message"
-                    value={message}
+                    value={newMessage}
                   ></textarea>
                   <div className="flex items-center pl-1 space-x-2">
                     {/* emoji tool */}
@@ -411,7 +433,7 @@ const ChatPage = () => {
 
                     {/* submit comment button */}
                     <button
-                      // onClick={() => submitComment(post._id)}
+                      onClick={handleSendMessage}
                       className={` ${mode ? "text-[#AAAAAA]" : "text-white"}`}
                     >
                       <SendIcon />
@@ -421,15 +443,18 @@ const ChatPage = () => {
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center h-screen">
-              <h1 className={`${mode ? "text-black" : "text-white"}  text-xl`}>
-                Click on a user to start a conversation
-              </h1>
-            </div>
+            <p
+              className={`flex justify-center items-center h-screen ${
+                mode ? "text-black" : "text-white"
+              }`}
+            >
+              Select a conversation to start chatting
+            </p>
           )}
         </div>
       </div>
     </div>
   );
 };
+
 export default ChatPage;
