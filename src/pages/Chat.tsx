@@ -62,103 +62,113 @@ const Chat: React.FC<ChatProps> = ({
 
   return (
     <div className={`${mode ? "text-black" : "text-white"} p-5`}>
-      <div className="relative">
-        <button
-          onClick={handleVisible}
-          className="lg:hidden bg-blue-500 py-7 px-5 fixed top-30"
-        >
-          <ArrowBackIosIcon />
-        </button>
+      <div className="relative lg:flex justify-center">
+        {/* Header section with fixed positioning */}
+        <div className="flex items-center justify-between lg:justify-center w-full lg:hidden fixed top-0 left-0 bg-blue-500 p-4 z-10">
+          {/* Back arrow button */}
+          <button onClick={handleVisible} className="lg:hidden py-2 px-3">
+            <ArrowBackIosIcon />
+          </button>
 
-        <div
-          onClick={() =>
-            navigate(`/users/${currentConversation?.otherMember.userName}`)
-          }
-          className="flex flex-col space-y-2 justify-center items-center"
-        >
-          <img
-            src={currentConversation?.otherMember?.profileImage}
-            alt={`${currentConversation?.otherMember.userName}'s profile`}
-            className="w-[50px] h-[50px] object-cover rounded-full"
-          />
-          <h1>{currentConversation?.otherMember.userName}</h1>
+          {/* User profile section */}
+          <div
+            onClick={() =>
+              navigate(`/users/${currentConversation?.otherMember.userName}`)
+            }
+            className="flex flex-col items-center cursor-pointer"
+          >
+            <img
+              src={currentConversation?.otherMember?.profileImage}
+              alt={`${currentConversation?.otherMember.userName}'s profile`}
+              className="w-[50px] h-[50px] object-cover rounded-full"
+            />
+            <h1 className="text-center">
+              {currentConversation?.otherMember.userName}
+            </h1>
+          </div>
+
+          {/* Empty div to maintain alignment */}
+          <div className="w-[50px] h-[50px]"></div>
         </div>
       </div>
 
-      {messages.map((message, index) => {
-        const isLoggedInUserMessage = message.senderId === loggedInUser._id;
+      {/* Apply padding to avoid content being hidden under the fixed header */}
+      <div className="pt-[80px]">
+        {messages.map((message, index) => {
+          const isLoggedInUserMessage = message.senderId === loggedInUser._id;
 
-        return (
-          <div
-            key={index}
-            className={`${mode ? " text-black" : " text-white "} py-5`}
-          >
-            {/* Render logged-in user messages */}
-            {isLoggedInUserMessage ? (
-              <div className="flex items-end justify-end  space-x-3">
-                <div
-                  className={`flex flex-col p-3 ${
-                    message.text == "" ? "" : "bg-blue-600"
-                  }  rounded-xl`}
-                >
-                  <p className="text-justify break-all">{message.text}</p>
-                  <div
-                    className={`grid gap-2 mt-2 ${
-                      message.images.length >= 2 && "grid-cols-2"
-                    } ${message.images.length == 4 && "grid-cols-4"}`}
-                  >
-                    {message.images.map((imageUrl, index) => (
-                      <img
-                        key={index}
-                        src={imageUrl}
-                        alt={`Image ${index}`}
-                        className={`rounded-[20px] py-1 h-[180px] w-[200px] ${
-                          message.images.length == 1
-                            ? "object cover"
-                            : "object-cover"
-                        }  `}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              // Render other user's messages
-              <div className="flex items-start justify-start space-x-3 my-2">
-                <div className="bg-gray-500 flex flex-col p-3 rounded-xl max-w-2/4">
-                  <p className="text-justify break-all">{message.text}</p>
-                  <div
-                    className={`grid gap-2 mt-2 ${
-                      message.images.length >= 2 && "grid-cols-2"
-                    } ${message.images.length == 4 && "grid-cols-4"}`}
-                  >
-                    {message.images.map((imageUrl, index) => (
-                      <img
-                        key={index}
-                        src={imageUrl}
-                        alt={`Post Image ${index}`}
-                        className={`rounded-[20px] h-[250px] w-[300px] ${
-                          message.images.length == 1
-                            ? "object-cover"
-                            : "object-contain"
-                        }  `}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-            {/* Time formatting for both users */}
-            <h1
-              className={`mt-2 text-xs ${
-                isLoggedInUserMessage ? "text-right" : "text-left"
-              }`}
+          return (
+            <div
+              key={index}
+              className={`${mode ? " text-black" : " text-white "} py-5`}
             >
-              {formatTimeAgo(message.createdAt)}
-            </h1>
-          </div>
-        );
-      })}
+              {/* Render logged-in user messages */}
+              {isLoggedInUserMessage ? (
+                <div className="flex items-end justify-end  space-x-3">
+                  <div
+                    className={`flex flex-col p-3 ${
+                      message.text == "" ? "" : "bg-blue-600"
+                    }  rounded-xl`}
+                  >
+                    <p className="text-justify break-all">{message.text}</p>
+                    <div
+                      className={`grid gap-2 mt-2 ${
+                        message.images.length >= 2 && "grid-cols-2"
+                      } ${message.images.length == 4 && "grid-cols-4"}`}
+                    >
+                      {message.images.map((imageUrl, index) => (
+                        <img
+                          key={index}
+                          src={imageUrl}
+                          alt={`Image ${index}`}
+                          className={`rounded-[20px] py-1 h-[180px] w-[200px] ${
+                            message.images.length == 1
+                              ? "object cover"
+                              : "object-cover"
+                          }  `}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // Render other user's messages
+                <div className="flex items-start justify-start space-x-3 my-2">
+                  <div className="bg-gray-500 flex flex-col p-3 rounded-xl max-w-2/4">
+                    <p className="text-justify break-all">{message.text}</p>
+                    <div
+                      className={`grid gap-2 mt-2 ${
+                        message.images.length >= 2 && "grid-cols-2"
+                      } ${message.images.length == 4 && "grid-cols-4"}`}
+                    >
+                      {message.images.map((imageUrl, index) => (
+                        <img
+                          key={index}
+                          src={imageUrl}
+                          alt={`Post Image ${index}`}
+                          className={`rounded-[20px] h-[250px] w-[300px] ${
+                            message.images.length == 1
+                              ? "object-cover"
+                              : "object-contain"
+                          }  `}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* Time formatting for both users */}
+              <h1
+                className={`mt-2 text-xs ${
+                  isLoggedInUserMessage ? "text-right" : "text-left"
+                }`}
+              >
+                {formatTimeAgo(message.createdAt)}
+              </h1>
+            </div>
+          );
+        })}
+      </div>
 
       <div ref={scrollRef} />
     </div>
@@ -166,3 +176,4 @@ const Chat: React.FC<ChatProps> = ({
 };
 
 export default Chat;
+``;

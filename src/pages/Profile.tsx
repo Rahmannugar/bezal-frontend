@@ -527,7 +527,6 @@ const Profile = () => {
 
                       <div className="space-x-4">
                         <button onClick={createConversation}>
-                          {/* <a href={`/chat/${user._id}`}> */}
                           <ChatIcon
                             sx={{
                               color: mode ? "black" : "white",
@@ -570,15 +569,13 @@ const Profile = () => {
                     </h1>
 
                     <div className="space-x-4 mt-[10px] lg:hidden">
-                      <button>
-                        <a href={`/chat/${user._id}`}>
-                          <ChatIcon
-                            sx={{
-                              color: mode ? "black" : "white",
-                              fontSize: 36,
-                            }}
-                          />
-                        </a>
+                      <button onClick={createConversation}>
+                        <ChatIcon
+                          sx={{
+                            color: mode ? "black" : "white",
+                            fontSize: 36,
+                          }}
+                        />
                       </button>
                       <button
                         onClick={handleFollow}
@@ -602,7 +599,7 @@ const Profile = () => {
 
                   {/* mobile menu */}
                   {/* other info */}
-                  <div className="lg:hidden">
+                  <div className="lg:hidden mt-5 space-y-2">
                     <div className="flex justify-between items-center">
                       {/* location */}
                       <div className="flex items-center space-x-2">

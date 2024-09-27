@@ -323,7 +323,7 @@ const ChatPage = () => {
         <div
           className={`${
             mode ? "bg-white" : "bg-transparent border"
-          }   rounded-[20px]  flex-col h-screen shadow-md mt-10 lg:mt-0 lg:w-3/5 py-5 ${
+          }   rounded-[20px] flex-col h-screen shadow-md mt-10 lg:mt-0 lg:w-3/5 py-5 ${
             visible ? "flex w-[100%]" : "hidden"
           } lg:flex`}
         >
@@ -337,7 +337,7 @@ const ChatPage = () => {
             </p>
           ) : currentConversation ? (
             <div
-              className="flex-grow overflow-y-auto h-screen relative"
+              className="flex-grow overflow-y-auto h- w-full relative"
               id="chat-container"
             >
               <Chat
