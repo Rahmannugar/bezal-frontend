@@ -47,7 +47,7 @@ const NotificationBar = () => {
       data,
     ]);
     dispatch(addNotification(data));
-  }, 2000);
+  }, 1200);
 
   useEffect(() => {
     // Listen for real-time notifications

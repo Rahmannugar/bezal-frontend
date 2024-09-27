@@ -12,6 +12,8 @@ import { useTheme } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ClearIcon from "@mui/icons-material/Clear";
 import { setConversation } from "../states/userSlice";
+import { debounce } from "lodash";
+import { io } from "socket.io-client";
 
 export interface User {
   _id: string;
@@ -47,6 +49,14 @@ interface CurrentConversation {
   otherMember: User;
   conversation: Conversation;
 }
+
+type Message = {
+  _id: string;
+  conversationId: string;
+  senderId: string;
+  text: string;
+  images: string[];
+};
 
 const ChatPage = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -239,7 +249,7 @@ const ChatPage = () => {
       });
 
       if (response.status === 200) {
-        setMessages([...messages, response.data]);
+        setMessages([...messages]);
         setNewMessage("");
         setImages([]);
 
@@ -266,6 +276,28 @@ const ChatPage = () => {
   };
 
   const scrollRef = useRef();
+
+  //real time messageas
+  const socket = io(backendURL, {
+    withCredentials: true,
+  });
+
+  const [realTimeMessages, setRealTimMessages] = useState<Message[]>([]);
+
+  const debouncedMessageHandler = debounce((data: Message) => {
+    setMessages((prevMessages) => [...prevMessages, data]);
+  }, 200);
+
+  useEffect(() => {
+    // Listen for real-time notifications
+    socket.on("newMessage", (data) => {
+      debouncedMessageHandler(data);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [backendURL, socket]);
 
   return (
     <div
