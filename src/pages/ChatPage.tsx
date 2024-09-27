@@ -286,8 +286,6 @@ const ChatPage = () => {
     withCredentials: true,
   });
 
-  const [realTimeMessages, setRealTimMessages] = useState<Message[]>([]);
-
   const debouncedMessageHandler = debounce((data: Message) => {
     setMessages((prevMessages) => [...prevMessages, data]);
   }, 200);
