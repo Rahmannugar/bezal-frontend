@@ -3,7 +3,7 @@ import PostBar from "./PostBar";
 
 const MiddleBar = () => {
   return (
-    <div>
+    <div className="mx-auto">
       <PostBar />
       <HomeFeedBar />
     </div>

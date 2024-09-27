@@ -89,7 +89,11 @@ const App = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <div className="overflow-hidden">
+      <div
+        className={`overflow-hidden min-h-screen pb-20 md:pb-5 ${
+          mode ? "bg-white" : "bg-black"
+        }`}
+      >
         {isLoading ? (
           <div
             className={`flex justify-center h-screen  items-center ${

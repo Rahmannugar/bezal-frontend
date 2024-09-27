@@ -57,6 +57,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
 
   const backendURL = import.meta.env.VITE_BACKEND_URL;
   const [newMessage, setNewMessage] = useState("");
@@ -250,6 +251,8 @@ const ChatPage = () => {
     }
   };
 
+  const scrollRef = useRef();
+
   return (
     <div
       style={{
@@ -260,12 +263,14 @@ const ChatPage = () => {
       }}
     >
       <Navbar />
-      <div className="flex justify-between items-center px-10">
+      <div className="flex justify-between items-center px-5 lg:px-10">
         {/* left slider */}
         <div
           className={`${
             mode ? "bg-white" : "bg-transparent border"
-          }   rounded-[20px] h-screen px-5 shadow-md w-1/3`}
+          }   rounded-[20px] h-screen px-5 shadow-md w-screen mt-10  ${
+            visible ? "hidden" : ""
+          } lg:mt-0 lg:w-1/3 lg:block`}
         >
           <div className="flex justify-between items-center py-5">
             <h1 className={`${mode ? "text-black" : "text-white"} text-xl`}>
@@ -288,7 +293,9 @@ const ChatPage = () => {
 
           {conversations.map((conversation) => (
             <Conversation
+              setVisible={setVisible}
               key={conversation._id}
+              messages={messages}
               setCurrentConversation={setCurrentConversation}
               conversation={conversation}
               currentConversation={currentConversation}
@@ -300,7 +307,9 @@ const ChatPage = () => {
         <div
           className={`${
             mode ? "bg-white" : "bg-transparent border"
-          }   rounded-[20px]  flex flex-col h-screen shadow-md w-3/5`}
+          }   rounded-[20px]  flex-col h-screen shadow-md mt-10 lg:mt-0 lg:w-3/5 py-5 ${
+            visible ? "flex w-[100%]" : "hidden"
+          } lg:flex`}
         >
           {error ? (
             <p
@@ -312,14 +321,16 @@ const ChatPage = () => {
             </p>
           ) : currentConversation ? (
             <div
-              className="flex-grow overflow-y-auto p-3 relative"
+              className="flex-grow overflow-y-auto h-screen relative"
               id="chat-container"
             >
               <Chat
+                setVisible={setVisible}
                 currentConversation={currentConversation}
                 messages={messages}
+                scrollRef={scrollRef}
               />
-              <div className=" bottom-3">
+              <div className="bottom-3 px-5 ">
                 <div className="flex flex-shrink-0 relative">
                   <textarea
                     onChange={handleMessageChange}

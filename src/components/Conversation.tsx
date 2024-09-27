@@ -3,15 +3,19 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 interface ConversationProps {
-  conversation: any; // Consider typing this more strictly if possible
+  conversation: any;
   currentConversation: any;
   setCurrentConversation: any;
+  setVisible: any;
+  messages: any;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
   conversation,
   currentConversation,
   setCurrentConversation,
+  setVisible,
+  messages,
 }) => {
   const mode = useSelector((state: RootState) => state.user.mode);
 
@@ -19,6 +23,7 @@ const Conversation: React.FC<ConversationProps> = ({
     try {
       if (conversation?.conversation?._id) {
         setCurrentConversation(conversation);
+        setVisible(true);
       } else {
         const backendURL = import.meta.env.VITE_BACKEND_URL;
         const response = await axios.post(
@@ -37,6 +42,7 @@ const Conversation: React.FC<ConversationProps> = ({
             otherMember: conversation.otherMember,
             conversation: response.data,
           });
+          setVisible(true);
         }
       }
     } catch (err) {
@@ -44,9 +50,8 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
-  // Defensive check to prevent rendering issues
   if (!conversation || !conversation.otherMember) {
-    return null; // Or some loading/error state
+    return null;
   }
 
   return (
@@ -65,9 +70,12 @@ const Conversation: React.FC<ConversationProps> = ({
           alt={`${conversation.otherMember.userName}'s profile`}
           className="w-[30px] h-[30px] object-cover rounded-full"
         />
-        <h1 className={`${mode ? "text-black" : "text-white"}`}>
-          {conversation.otherMember.userName}
-        </h1>
+        <div className="flex flex-col">
+          <h1 className={`${mode ? "text-black" : "text-white"}`}>
+            {conversation.otherMember.userName}
+          </h1>
+          <p className={`${mode ? "text-gray-600" : "text-gray-300"}`}></p>
+        </div>
       </button>
     </div>
   );

@@ -1,14 +1,22 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { User } from "./ChatPage";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { useEffect } from "react";
 
 interface ChatProps {
   currentConversation: any;
   messages: any[];
+  setVisible: any;
+  scrollRef: any;
 }
 
-const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
+const Chat: React.FC<ChatProps> = ({
+  currentConversation,
+  messages,
+  setVisible,
+  scrollRef,
+}) => {
   const mode = useSelector((state: RootState) => state.user.mode);
   const loggedInUser = useSelector((state: RootState) => state.user.user);
 
@@ -37,6 +45,15 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
     }
   };
 
+  useEffect(() => {
+    if (scrollRef?.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  const handleVisible = () => {
+    setVisible(false);
+  };
   const navigate = useNavigate();
 
   if (!currentConversation) {
@@ -44,37 +61,47 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
   }
 
   return (
-    <div className={`${mode ? "text-black" : "text-white"} px-5 py-5`}>
-      <div
-        onClick={() =>
-          navigate(`/users/${currentConversation?.otherMember.userName}`)
-        }
-        className="flex flex-col space-y-2 justify-center items-center"
-      >
-        <img
-          src={currentConversation?.otherMember?.profileImage}
-          alt={`${currentConversation?.otherMember.userName}'s profile`}
-          className="w-[50px] h-[50px] object-cover rounded-full"
-        />
-        <h1>{currentConversation?.otherMember.userName}</h1>
+    <div className={`${mode ? "text-black" : "text-white"} p-5`}>
+      <div className="relative">
+        <button
+          onClick={handleVisible}
+          className="lg:hidden bg-blue-500 py-7 px-5 fixed top-30"
+        >
+          <ArrowBackIosIcon />
+        </button>
+
+        <div
+          onClick={() =>
+            navigate(`/users/${currentConversation?.otherMember.userName}`)
+          }
+          className="flex flex-col space-y-2 justify-center items-center"
+        >
+          <img
+            src={currentConversation?.otherMember?.profileImage}
+            alt={`${currentConversation?.otherMember.userName}'s profile`}
+            className="w-[50px] h-[50px] object-cover rounded-full"
+          />
+          <h1>{currentConversation?.otherMember.userName}</h1>
+        </div>
       </div>
+
       {messages.map((message, index) => {
         const isLoggedInUserMessage = message.senderId === loggedInUser._id;
 
         return (
           <div
             key={index}
-            className={`${mode ? " text-black" : " text-white "}   px-5 py-5`}
+            className={`${mode ? " text-black" : " text-white "} py-5`}
           >
             {/* Render logged-in user messages */}
             {isLoggedInUserMessage ? (
-              <div className="flex items-end justify-end space-x-3 my-2">
+              <div className="flex items-end justify-end  space-x-3">
                 <div
                   className={`flex flex-col p-3 ${
-                    message.text == "" ? "" : "bg-gray-500"
-                  } max-w-[60%] rounded-xl`}
+                    message.text == "" ? "" : "bg-blue-600"
+                  }  rounded-xl`}
                 >
-                  <p>{message.text}</p>
+                  <p className="text-justify break-all">{message.text}</p>
                   <div
                     className={`grid gap-2 mt-2 ${
                       message.images.length >= 2 && "grid-cols-2"
@@ -98,8 +125,8 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
             ) : (
               // Render other user's messages
               <div className="flex items-start justify-start space-x-3 my-2">
-                <div className="bg-blue-600 flex flex-col p-3 rounded-xl max-w-2/4">
-                  <p>{message.text}</p>
+                <div className="bg-gray-500 flex flex-col p-3 rounded-xl max-w-2/4">
+                  <p className="text-justify break-all">{message.text}</p>
                   <div
                     className={`grid gap-2 mt-2 ${
                       message.images.length >= 2 && "grid-cols-2"
@@ -132,6 +159,8 @@ const Chat: React.FC<ChatProps> = ({ currentConversation, messages }) => {
           </div>
         );
       })}
+
+      <div ref={scrollRef} />
     </div>
   );
 };

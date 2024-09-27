@@ -97,7 +97,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav>
+    <nav className="fixed mb-10">
       <div className="flex relative py-5 justify-between space-x-3 w-full items-center px-5 md:px-16">
         {/* App icon */}
         <a href="/">
