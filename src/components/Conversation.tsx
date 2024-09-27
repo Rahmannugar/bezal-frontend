@@ -7,7 +7,6 @@ interface ConversationProps {
   currentConversation: any;
   setCurrentConversation: any;
   setVisible: any;
-  messages: any;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
@@ -15,7 +14,6 @@ const Conversation: React.FC<ConversationProps> = ({
   currentConversation,
   setCurrentConversation,
   setVisible,
-  messages,
 }) => {
   const mode = useSelector((state: RootState) => state.user.mode);
 

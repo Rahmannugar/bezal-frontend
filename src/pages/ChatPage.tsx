@@ -32,6 +32,7 @@ export interface User {
 }
 
 export interface Conversation {
+  [x: string]: any;
   _id: string;
   members: User[];
   createdAt: string;
@@ -65,7 +66,10 @@ const ChatPage = () => {
   const [currentConversation, setCurrentConversation] =
     useState<CurrentConversation | null>(null);
   const [messages, setMessages] = useState<Messages[]>([]);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+
+  const [conversations, setConversations] = useState<
+    (Conversation | undefined)[]
+  >([]);
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -121,7 +125,7 @@ const ChatPage = () => {
   }, [backendURL, user._id, messages]);
 
   const filteredConversations = conversations.filter((conversation) => {
-    const otherMember = conversation.otherMember;
+    const otherMember = conversation?.otherMember;
     if (!otherMember) return false;
 
     const userName = otherMember.userName?.toLowerCase() || "";
@@ -153,7 +157,7 @@ const ChatPage = () => {
 
             setConversations((prevConversations) => {
               const existingConversationIndex = prevConversations.findIndex(
-                (conv) => conv._id === newConversation._id
+                (conv) => conv?._id === newConversation._id
               );
               if (existingConversationIndex !== -1) {
                 const updatedConversations = [...prevConversations];
@@ -255,7 +259,7 @@ const ChatPage = () => {
 
         setConversations((prevConversations) => {
           const existingConversationIndex = prevConversations.findIndex(
-            (conv) => conv._id === currentConversation?.conversation._id
+            (conv) => conv?._id === currentConversation?.conversation._id
           );
 
           if (existingConversationIndex !== -1) {
@@ -342,8 +346,7 @@ const ChatPage = () => {
           {filteredConversations.map((conversation) => (
             <Conversation
               setVisible={setVisible}
-              key={conversation._id}
-              messages={messages}
+              key={conversation?._id}
               setCurrentConversation={setCurrentConversation}
               conversation={conversation}
               currentConversation={currentConversation}

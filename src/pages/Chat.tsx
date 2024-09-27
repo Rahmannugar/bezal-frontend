@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { useEffect } from "react";
+import { Key, useEffect } from "react";
 
 interface ChatProps {
   currentConversation: any;
@@ -116,7 +116,7 @@ const Chat: React.FC<ChatProps> = ({
                         message.images.length >= 2 && "grid-cols-2"
                       } ${message.images.length == 4 && "grid-cols-4"}`}
                     >
-                      {message.images.map((imageUrl, index) => (
+                      {message.images.map((imageUrl: string | undefined, index: Key | null | undefined) => (
                         <img
                           key={index}
                           src={imageUrl}
@@ -141,7 +141,7 @@ const Chat: React.FC<ChatProps> = ({
                         message.images.length >= 2 && "grid-cols-2"
                       } ${message.images.length == 4 && "grid-cols-4"}`}
                     >
-                      {message.images.map((imageUrl, index) => (
+                      {message.images.map((imageUrl: string | undefined, index: Key | null | undefined) => (
                         <img
                           key={index}
                           src={imageUrl}

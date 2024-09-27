@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 interface EditProfileProps {
   user: {
+    _id: string;
     firstName: string;
     lastName: string;
     userName: string;

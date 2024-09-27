@@ -40,6 +40,7 @@ const NotificationBar = () => {
   const [realTimeNotifications, setRealTimeNotifications] = useState<
     Notification[]
   >([]);
+  console.log(realTimeNotifications.length);
 
   const debouncedNotificationHandler = debounce((data: Notification) => {
     setRealTimeNotifications((prevNotifications) => [

@@ -4,7 +4,6 @@ import RightBar from "../components/RightBar";
 import SinglePost from "../components/SinglePost";
 import { useTheme } from "@mui/material";
 import { RootState } from "../states/store";
-import UnLeftBar from "../components/UnLeftBar";
 import LeftBar from "../components/LeftBar";
 
 const Post = () => {
