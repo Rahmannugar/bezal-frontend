@@ -131,7 +131,7 @@ const NotificationBar = () => {
   );
 
   return (
-    <div>
+    <div className="mx-auto">
       <div
         className={`${
           mode ? "bg-white text-black" : "bg-transparent text-white border"

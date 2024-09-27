@@ -4,7 +4,7 @@ import { RootState } from "../states/store";
 const RightBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
   return (
-    <div className="px-5 hidden fixed right-0 xl:block pt-10 space-y-10">
+    <div className="px-5 hidden lg:fixed right-0 xl:block pt-10 space-y-10">
       {/* top right bar */}
       <div
         className={` ${

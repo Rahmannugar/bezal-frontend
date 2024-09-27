@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import LeftBar from "../components/LeftBar";
 import Navbar from "../components/Navbar";
 import RightBar from "../components/RightBar";
 import SinglePost from "../components/SinglePost";
 import { useTheme } from "@mui/material";
 import { RootState } from "../states/store";
+import UnLeftBar from "../components/UnLeftBar";
 
 const Post = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -20,7 +20,7 @@ const Post = () => {
     >
       <Navbar />
       <div className="flex">
-        <LeftBar />
+        <UnLeftBar />
         <SinglePost />
         <RightBar />
       </div>

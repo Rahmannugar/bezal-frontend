@@ -58,6 +58,11 @@ const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   const backendURL = import.meta.env.VITE_BACKEND_URL;
   const [newMessage, setNewMessage] = useState("");
@@ -104,6 +109,15 @@ const ChatPage = () => {
     };
     fetchConversations();
   }, [backendURL, user._id, messages]);
+
+  const filteredConversations = conversations.filter((conversation) => {
+    const otherMember = conversation.otherMember;
+    if (!otherMember) return false;
+
+    const userName = otherMember.userName?.toLowerCase() || "";
+
+    return userName.includes(searchQuery.toLowerCase());
+  });
 
   const dispatch = useDispatch();
 
@@ -287,11 +301,13 @@ const ChatPage = () => {
             <input
               type="text"
               placeholder="Search"
+              value={searchQuery}
+              onChange={handleSearchChange}
               className="w-full outline-none border-none bg-transparent focus:ring-0"
             />
           </div>
 
-          {conversations.map((conversation) => (
+          {filteredConversations.map((conversation) => (
             <Conversation
               setVisible={setVisible}
               key={conversation._id}

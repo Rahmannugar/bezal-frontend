@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
 
-const LeftBar = () => {
+const UnLeftBar = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const trimmedUserName =
     user.userName.trim().length > 6
@@ -11,7 +11,7 @@ const LeftBar = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
 
   return (
-    <div className="px-5 hidden lg:fixed left-0 md:block pt-10">
+    <div className="px-5 hidden md:block pt-10">
       {/* top left side bar */}
       <div
         className={`min-w-[238px] ${
@@ -402,4 +402,4 @@ const LeftBar = () => {
     </div>
   );
 };
-export default LeftBar;
+export default UnLeftBar;

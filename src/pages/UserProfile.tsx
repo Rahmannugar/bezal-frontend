@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import LeftBar from "../components/LeftBar";
 import Navbar from "../components/Navbar";
 import { RootState } from "../states/store";
 import {
@@ -21,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { setUser } from "../states/userSlice";
 
 import SendIcon from "@mui/icons-material/Send";
+import UnLeftBar from "../components/UnLeftBar";
 
 const UserProfile = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -385,7 +385,7 @@ const UserProfile = () => {
     >
       <Navbar />
       <div className="flex md:space-x-5">
-        <LeftBar />
+        <UnLeftBar />
         <div className="w-full px-5 mt-5 lg:px-10">
           {/* cover image */}
           <div className="relative">

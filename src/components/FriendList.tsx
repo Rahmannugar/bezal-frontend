@@ -49,62 +49,65 @@ const FriendList = () => {
     getUserFollowing();
   }, []);
   return (
-    <div
-      className={`${
-        mode ? "bg-white text-[#5D5F63]" : "bg-transparent border text-white"
-      } p-7 mx-10 flex justify-between md:min-w-[450px] lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden rounded-[20px] mt-10 shadow-md`}
-    >
-      <div className="border-r w-1/2">
-        <h1>Followers</h1>
-        <div>
-          {followerResults.length > 0 ? (
-            followerResults.map((follower) => (
+    <div className="mx-auto">
+      {" "}
+      <div
+        className={`${
+          mode ? "bg-white text-[#5D5F63]" : "bg-transparent border text-white"
+        } p-7 mx-10 flex justify-between md:min-w-[450px] lg:min-w-[600px] md:w-[50vw] max-w-[100%] min-w-[270px] w-[90vw] overflow-hidden rounded-[20px] mt-10 shadow-md`}
+      >
+        <div className="border-r w-1/2">
+          <h1>Followers</h1>
+          <div>
+            {followerResults.length > 0 ? (
+              followerResults.map((follower) => (
+                <button className="hover:text-[#4385F5] flex flex-col">
+                  <div
+                    key={follower._id}
+                    className="flex items-center justify-center space-x-3 mt-5"
+                    onClick={() => navigate(`/users/${follower.userName}`)}
+                  >
+                    <img
+                      src={follower.profileImage}
+                      alt={`${follower.userName}'s profile`}
+                      className="w-[30px] h-[30px] object-cover rounded-full"
+                    />
+                    <div>
+                      <span>{follower.userName}</span>
+                    </div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="mt-5">You currently have no follower!</div>
+            )}
+          </div>
+        </div>
+        <div className="w-1/2 border-l px-5">
+          <h1>Following</h1>
+          {followResults.length > 0 ? (
+            followResults.map((follow) => (
               <button className="hover:text-[#4385F5] flex flex-col">
                 <div
-                  key={follower._id}
+                  key={follow._id}
                   className="flex items-center justify-center space-x-3 mt-5"
-                  onClick={() => navigate(`/users/${follower.userName}`)}
+                  onClick={() => navigate(`/users/${follow.userName}`)}
                 >
                   <img
-                    src={follower.profileImage}
-                    alt={`${follower.userName}'s profile`}
+                    src={follow.profileImage}
+                    alt={`${follow.userName}'s profile`}
                     className="w-[30px] h-[30px] object-cover rounded-full"
                   />
                   <div>
-                    <span>{follower.userName}</span>
+                    <span>{follow.userName}</span>
                   </div>
                 </div>
               </button>
             ))
           ) : (
-            <div className="mt-5">You currently have no follower!</div>
+            <div className="mt-5">You currently follow no one!</div>
           )}
         </div>
-      </div>
-      <div className="w-1/2 border-l px-5">
-        <h1>Following</h1>
-        {followResults.length > 0 ? (
-          followResults.map((follow) => (
-            <button className="hover:text-[#4385F5] flex flex-col">
-              <div
-                key={follow._id}
-                className="flex items-center justify-center space-x-3 mt-5"
-                onClick={() => navigate(`/users/${follow.userName}`)}
-              >
-                <img
-                  src={follow.profileImage}
-                  alt={`${follow.userName}'s profile`}
-                  className="w-[30px] h-[30px] object-cover rounded-full"
-                />
-                <div>
-                  <span>{follow.userName}</span>
-                </div>
-              </div>
-            </button>
-          ))
-        ) : (
-          <div className="mt-5">You currently follow no one!</div>
-        )}
       </div>
     </div>
   );

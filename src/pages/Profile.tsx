@@ -17,9 +17,9 @@ import {
   useTheme,
 } from "@mui/material";
 import Navbar from "../components/Navbar";
-import LeftBar from "../components/LeftBar";
 import { setConversation, setUser } from "../states/userSlice";
 import SendIcon from "@mui/icons-material/Send";
+import UnLeftBar from "../components/UnLeftBar";
 
 interface User {
   _id: string;
@@ -456,7 +456,7 @@ const Profile = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {error ? (
         <p
           className={`flex justify-center items-center h-screen ${
@@ -478,7 +478,7 @@ const Profile = () => {
           >
             <Navbar />
             <div className="flex md:space-x-5">
-              <LeftBar />
+              <UnLeftBar />
               <div className="w-full px-10">
                 {/* cover image */}
                 <div className="relative">
