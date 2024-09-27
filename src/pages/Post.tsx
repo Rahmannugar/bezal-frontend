@@ -5,6 +5,7 @@ import SinglePost from "../components/SinglePost";
 import { useTheme } from "@mui/material";
 import { RootState } from "../states/store";
 import UnLeftBar from "../components/UnLeftBar";
+import LeftBar from "../components/LeftBar";
 
 const Post = () => {
   const mode = useSelector((state: RootState) => state.user.mode);
@@ -20,7 +21,7 @@ const Post = () => {
     >
       <Navbar />
       <div className="flex">
-        <UnLeftBar />
+        <LeftBar />
         <SinglePost />
         <RightBar />
       </div>
