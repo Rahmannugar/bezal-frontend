@@ -15,7 +15,7 @@ const UnLeftBar = () => {
       {/* top left side bar */}
       <div
         className={`min-w-[238px] ${
-          mode ? "bg-whit" : "bg-transparent border"
+          mode ? "bg-white" : "bg-transparent border"
         } w-[20vw] max-w-[100%] h-auto py-8 shadow-md rounded-[20px] flex flex-col space-y-5`}
       >
         {/* individual icons */}
