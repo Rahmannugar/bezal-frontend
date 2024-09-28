@@ -398,7 +398,7 @@ const HomeFeedBar = () => {
                 <div className="flex items-center space-x-7">
                   {/* like menu */}
                   <div
-                    className={`flex items-center space-x-3 ${
+                    className={`flex items-center space-x-2 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
@@ -442,7 +442,7 @@ const HomeFeedBar = () => {
 
                   {/* dislike menu */}
                   <div
-                    className={`flex items-center space-x-3 ${
+                    className={`flex items-center space-x-2 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
@@ -514,7 +514,7 @@ const HomeFeedBar = () => {
 
                   {/* comment menu */}
                   <div
-                    className={`flex items-center space-x-3 mt-1 ${
+                    className={`flex items-center space-x-2 mt-1 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
@@ -553,11 +553,11 @@ const HomeFeedBar = () => {
                 <div>
                   <button
                     onClick={() => handleTipClick(post.userId)}
-                    className={`hover:text-[#4385F5] ${
+                    className={`hover:text-[#4385F5]  ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     }`}
                   >
-                    $ Tip
+                    $Tip
                   </button>
                 </div>
               </div>

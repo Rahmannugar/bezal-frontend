@@ -31,6 +31,8 @@ const ResetPassword = () => {
   //submit action
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const lowerCaseEmail = email.toLowerCase();
     try {
       // posting FormData to backend for login
       const response = await axios({
@@ -40,7 +42,7 @@ const ResetPassword = () => {
           "Content-Type": "application/json",
         },
         data: {
-          email,
+          email: lowerCaseEmail,
         },
         withCredentials: true,
       });

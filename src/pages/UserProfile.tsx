@@ -982,7 +982,7 @@ const UserProfile = () => {
                 <div className="flex items-center space-x-7">
                   {/* like menu */}
                   <div
-                    className={`flex items-center space-x-3 ${
+                    className={`flex items-center space-x-2 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
@@ -1026,7 +1026,7 @@ const UserProfile = () => {
 
                   {/* dislike menu */}
                   <div
-                    className={`flex items-center space-x-3 ${
+                    className={`flex items-center space-x-2 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
@@ -1098,7 +1098,7 @@ const UserProfile = () => {
 
                   {/* comment menu */}
                   <div
-                    className={`flex items-center space-x-3 mt-1 ${
+                    className={`flex items-center space-x-2 mt-1 ${
                       mode ? "text-[#5D5F63]" : "text-white"
                     } `}
                   >
