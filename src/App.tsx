@@ -19,6 +19,7 @@ import NewPassword from "./pages/NewPassword";
 import ChatPage from "./pages/ChatPage";
 import Notifications from "./pages/Notifications";
 import GridLoader from "react-spinners/GridLoader";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 const App = () => {
   const theme = createTheme({
     palette: {
@@ -159,24 +160,7 @@ const App = () => {
                 className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
               >
                 <div className="flex justify-center">
-                  <svg
-                    width="40"
-                    height="40"
-                    viewBox="0 0 40 40"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="hover:fill-[#4385F5] fill-[#AAAAAA]"
-                  >
-                    <circle cx="20" cy="20" r="20" fill="#FAFAFA" />
-                    <path
-                      d="M30.3114 25.5829L27.738 21.9417V14.8281C27.738 11.1973 25.0508 8.18269 21.5608 7.66783V6.06099C21.5608 5.47504 21.0857 5 20.4998 5C19.9139 5 19.4389 5.47504 19.4389 6.06099V7.66777C15.9489 8.18264 13.2616 11.1972 13.2616 14.828V21.9417L10.6882 25.5829C10.1928 26.2837 10.6945 27.2562 11.5546 27.2562H29.4451C30.3033 27.2563 30.8079 26.2852 30.3114 25.5829Z"
-                      fill=""
-                    />
-                    <path
-                      d="M20.4999 28.0138C18.8495 28.0138 17.5068 29.3564 17.5068 31.0068C17.5068 32.6572 18.8496 34 20.4999 34C22.1503 34 23.4929 32.6572 23.4929 31.0069C23.4929 29.3565 22.1502 28.0138 20.4999 28.0138Z"
-                      fill=""
-                    />
-                  </svg>
+                  <NotificationsIcon className="text-white group-hover:text-[#4385F5]" />
                   {user.readNotifications ? (
                     ""
                   ) : (
