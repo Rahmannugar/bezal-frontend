@@ -98,7 +98,7 @@ const Login = () => {
     }
   };
 
-  const mode = useSelector((state: RootState) => state.user.mode);
+
 
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 justify-center md:justify-start items-center">
