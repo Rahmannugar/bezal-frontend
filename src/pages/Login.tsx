@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../states/userSlice";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Alert, Snackbar } from "@mui/material";
-import { RootState } from "../states/store";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -97,8 +96,6 @@ const Login = () => {
       setResponseSeverity("error");
     }
   };
-
-
 
   return (
     <div className="flex lg:space-x-12 xl:space-x-28 2xl:space-x-48 justify-center md:justify-start items-center">
